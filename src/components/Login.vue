@@ -69,28 +69,21 @@ html,body{
 .logo-image {
     width: 10vw;
     height: 10vw;
-    top: 10vh;
+    display: block;
+    margin: 0px auto;
+    margin-top: 15vh;
     min-width: 150px;
     min-height: 150px;
-    /* justify-content: center; */
-    /* position: absolute;
-    top: 10vh;
-    left: 45vw; */
 }
 
 .login-form {
     width: 20vw;
     height: 30vh;
+    position: relative;
     margin: 0px auto;
-    margin-top: 10vh;
+    /* margin-top: 15vh; */
     min-width: 307px;
     min-height: 260px;
-    /* position: absolute; */
-    /* top: calc(10vh + 10vw + 40px); */
-    /* display:flex;
-    flex-direction: column;
-    justify-content: center; */
-    /* left: 40vw; */
     /* padding: 20px; */
     /* border: 0.2px solid lightgray;
     border-radius: 5px;
