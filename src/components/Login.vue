@@ -70,8 +70,9 @@ html,body{
     width: 10vw;
     height: 10vw;
     display: block;
-    margin: 0px auto;
-    margin-top: 15vh;
+    position: relative;
+    top: 15vh;
+    margin: 0 auto;
     min-width: 150px;
     min-height: 150px;
 }
@@ -80,8 +81,8 @@ html,body{
     width: 20vw;
     height: 30vh;
     position: relative;
-    margin: 0px auto;
-    /* margin-top: 15vh; */
+    top: 15vh;
+    margin: 0 auto;
     min-width: 307px;
     min-height: 260px;
     /* padding: 20px; */
