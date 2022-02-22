@@ -23,13 +23,14 @@
         </el-form-item>
 
         <el-form-item class = "enter-item">
-            <el-button type = "primary">登录</el-button>
+            <el-button type = "primary" @click = "login">登录</el-button>
         </el-form-item>
     </el-form>
 </template>
 
 <script>
     import { User,Lock } from '@element-plus/icons-vue'
+    // import router from '../router/router'
     
     export default {
         components: {
@@ -43,6 +44,12 @@
                     account: "",
                     password: ""
                 }
+            }
+        },
+        //方法
+        methods: {
+            login() {
+                this.$router.push('/home')
             }
         },
         //生命周期 - 创建完成,访问当前this实例
