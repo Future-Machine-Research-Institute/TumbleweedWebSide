@@ -1,5 +1,5 @@
 <template>
-
+    <div class = "head"></div>
     <div class = "container">
         <div class = "item">1</div>
         <div class = "item">2</div>
@@ -9,6 +9,8 @@
         <div class = "item">6</div>
         <div class = "item">7</div>
         <div class = "item">8</div>
+        <div class = "item">9</div>
+        <div class = "item">10</div>
     </div>
     
 </template>
@@ -34,26 +36,30 @@
 <style scoped>
 /* @import url(); 引入css类 */
 
-.container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    /* justify-content: space-around; */
-    /* align-content: baseline; */
+.head {
+    width: 100vw;
+    height: 64px;
+    background-color: cornflowerblue;
 }
 
-/* .container:after {
-    content: "";
-    width: 200px;
-    height: 0px;
-    visibility: hidden;
-} */
+.container {
+    width: 100vw;
+    height: calc(100vh - 104px);
+    /* background-color: black; */
+    display: grid;
+    justify-content: space-evenly;
+    grid-template-columns: repeat(auto-fill, 250px);
+    grid-template-rows: repeat(auto-fill, 250px);
+    grid-gap: 20px;
+    gap: 20px;
+    /* overflow: auto; */
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
 
 .item {
-    width: 200px;
-    height: 200px;
-    margin: 15px 10px 0 0;
+    width: 250px;
+    height: 250px;
     background-color: bisque;
 }
 
