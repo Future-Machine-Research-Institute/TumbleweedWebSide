@@ -23,6 +23,7 @@ html,body,#app{
   height: 100%;
   margin: auto;
   box-sizing: border-box;
+  background-color: rgb(245, 247, 248);
 }
 
 #app {
