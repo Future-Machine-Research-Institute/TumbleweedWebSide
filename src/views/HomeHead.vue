@@ -1,5 +1,5 @@
 <template>
-    <div id = "container">
+    <div>
         <el-image class = "logo-image" :src = "logoUrl" ></el-image>
         <el-input class = "search-input" type = "text" v-model = "searchString" >
             <template #prefix>
@@ -38,11 +38,9 @@
 <style scoped>
 /* @import url(); 引入css类 */
 
-.container {
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-}
+/* .container {
+    
+} */
 
 .logo-image {
     width: 44px;

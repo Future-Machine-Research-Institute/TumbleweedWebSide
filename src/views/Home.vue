@@ -1,7 +1,8 @@
 <template>
     <!-- <div class = "head"></div> -->
     <home-head class = "head"></home-head>
-    <div class = "filter-bar"></div>
+    <!-- <div class = "filter-bar"></div> -->
+    <home-filter class = "filter-bar"></home-filter>
     <div class = "container">
         <div class = "item">1</div>
         <div class = "item">2</div>
@@ -19,9 +20,11 @@
 
 <script>
     import HomeHead from "./HomeHead.vue"
+    import HomeFilter from "./HomeFilter.vue"
     export default {
         components:{
-            HomeHead
+            HomeHead,
+            HomeFilter
         },
         data() {
             return {
