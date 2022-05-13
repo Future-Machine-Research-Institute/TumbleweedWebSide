@@ -1,30 +1,18 @@
 <template>
-    <!-- <div class = "head"></div> -->
     <home-head class = "head"></home-head>
-    <!-- <div class = "filter-bar"></div> -->
-    <home-filter class = "filter-bar"></home-filter>
-    <div class = "container">
-        <div class = "item">1</div>
-        <div class = "item">2</div>
-        <div class = "item">3</div>
-        <div class = "item">4</div>
-        <div class = "item">5</div>
-        <div class = "item">6</div>
-        <div class = "item">7</div>
-        <div class = "item">8</div>
-        <div class = "item">9</div>
-        <div class = "item">10</div>
-    </div>
-    
+    <home-filter class = "filter"></home-filter>
+    <home-container class = "container"></home-container>
 </template>
 
 <script>
     import HomeHead from "./HomeHead.vue"
     import HomeFilter from "./HomeFilter.vue"
+    import HomeContainer from "./HomeContainer.vue"
     export default {
-        components:{
+        components: {
             HomeHead,
-            HomeFilter
+            HomeFilter,
+            HomeContainer
         },
         data() {
             return {
@@ -52,9 +40,10 @@
     /* background-color: rgb(236, 236, 236); */
 }
 
-.filter-bar {
-    width: 100vw;
+.filter {
+    width: calc(90vw + 20px);
     height: 50px;
+    margin-left: calc(5vw - 10px);
     /* background-color: lightgrey; */
 
 }
@@ -62,40 +51,6 @@
 .container {
     width: 90vw;
     height: calc(100vh - 164px);
-    margin: 0 auto;
-    background-color: white;
-    display: grid;
-    justify-content: space-evenly;
-    grid-template-columns: repeat(auto-fill, 250px);
-    grid-template-rows: repeat(auto-fill, 100px);
-    grid-gap: 20px;
-    gap: 20px;
-    overflow: auto;
-    padding-top: 25px;
-    padding-bottom: 25px;
-    padding-left: 10px;
-    padding-right: 10px;
-    
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-
-    /* border: 0.2px solid lightgray; */
-    border-radius: 5px;
 }
-
-.container::-webkit-scrollbar {
-    display:none;/*隐藏滚动条*/
- }
-
-.item {
-    width: 250px;
-    height: 100px;
-    /* background-color: bisque; */
-    background-color: white;
-    border-radius: 5px;
-    border: 0.2px solid lightgray;
-    /* box-shadow: 0 0 30px #DCDFE6; */
-}
-
     
 </style>

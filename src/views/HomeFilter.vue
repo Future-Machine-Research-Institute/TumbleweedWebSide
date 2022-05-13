@@ -1,6 +1,6 @@
 <template>
     <div class = "main">
-        <el-select v-model = "temp1" class="m-2" placeholder="选择系统" size="large">
+        <el-select v-model = "system" class="system-select" placeholder="选择系统" size="large">
             <el-option
             v-for="item in systems"
             :key="item.value"
@@ -9,7 +9,7 @@
             >
             </el-option>
         </el-select>
-        <el-select v-model = "temp2" class="m-2" placeholder="选择版本" size="large">
+        <el-select v-model = "version" class="version-select" placeholder="选择版本" size="large">
             <el-option
             v-for="item in versions"
             :key="item.value"
@@ -53,8 +53,8 @@
                     label: '正式版',
                   }
                   ],
-                temp1 : "",
-                temp2 : ""
+                system : "",
+                version : ""
             }
         },
         //生命周期 - 创建完成,访问当前this实例
@@ -73,8 +73,16 @@
 
 .main {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: left;
     align-items: center;
+}
+
+/* .system-select {
+
+} */
+
+.version-select {
+  margin-left: 10px;
 }
     
 </style>
