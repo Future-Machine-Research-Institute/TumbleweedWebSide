@@ -31,7 +31,7 @@
 <script>
     import { User,Lock } from '@element-plus/icons-vue'
     // import router from '../router/router'
-    import EDCryptionShareInstance from '@future-machine-research-institute/jsbasetools'
+    import EDCryptionShareInstance from '@future-machine-research-institute/jsbasetools/edcryption'
 
     export default {
         components: {
@@ -54,7 +54,7 @@
                 const myPlaintextPassword = 's0/\/\P4$$w0rD'
                 const someOtherPlaintextPassword = 'not_bacon'
                 let result = EDCryptionShareInstance.bcryptHashSync(myPlaintextPassword, saltRounds)
-                let isSame = EDCryptionShareInstance.bcryptCompareSync(myPlaintextPassword, result)
+                let isSame = EDCryptionShareInstance.bcryptCompareSync(someOtherPlaintextPassword, result)
                 if(isSame) {
                     this.$router.push('/home')
                 } else {
