@@ -31,7 +31,8 @@
 <script>
     import { User,Lock } from '@element-plus/icons-vue'
     // import router from '../router/router'
-    
+    import EDCryptionShareInstance from '@future-machine-research-institute/jsbasetools/edcryption'
+
     export default {
         components: {
             User,
@@ -49,7 +50,16 @@
         //方法
         methods: {
             login() {
-                this.$router.push('/home')
+                const saltRounds = 10
+                const myPlaintextPassword = 's0/\/\P4$$w0rD'
+                const someOtherPlaintextPassword = 'not_bacon'
+                let result = EDCryptionShareInstance.bcryptHashSync(myPlaintextPassword, saltRounds)
+                let isSame = EDCryptionShareInstance.bcryptCompareSync(myPlaintextPassword, result)
+                if(isSame) {
+                    this.$router.push('/home')
+                } else {
+
+                }
             }
         },
         //生命周期 - 创建完成,访问当前this实例
