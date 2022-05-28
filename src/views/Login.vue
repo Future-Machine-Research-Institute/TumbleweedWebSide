@@ -31,7 +31,7 @@
 <script>
     import { User,Lock } from '@element-plus/icons-vue'
     // import router from '../router/router'
-    import EDCryptionShareInstance from '@future-machine-research-institute/jsbasetools/edcryption'
+    import EDCryptionShareInstance from '@future-machine-research-institute/jsbasetools'
 
     export default {
         components: {
