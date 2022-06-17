@@ -7,16 +7,30 @@
             </template>
         </el-input>
         <el-button class = "search-button" type="primary" round >搜索</el-button>
-        <el-avatar class = "user-avatar" ></el-avatar>
+        <!-- <el-avatar class = "user-avatar" ></el-avatar> -->
+        <el-dropdown class = "avatar-container">
+        <el-avatar class = "user-avatar" >
+            <!-- <template #prefix>
+                <el-icon class="el-icon--right" :size = "20"><arrow-down /></el-icon>
+            </template> -->
+        </el-avatar>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item >个人信息</el-dropdown-item>
+            <el-dropdown-item divided>app管理</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
 </template>
 
 <script>
-    import { UserFilled, Search } from '@element-plus/icons-vue'
+    import { UserFilled, Search, ArrowDown } from '@element-plus/icons-vue'
     export default {
         components: {
             UserFilled,
-            Search
+            Search,
+            ArrowDown
         },
         data() {
             return {
@@ -76,13 +90,31 @@
     min-width: 60px;
 }
 
-.user-avatar {
+/* .user-avatar {
     width: 40px;
     height: 40px;
     display: block;
     position: absolute;
     top: 12px;
     right: 15px;
+} */
+
+.avatar-container{
+    width: 40px;
+    height: 40px;
+    display: block;
+    position: absolute;
+    top: 12px;
+    right: 25px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    display: block;
+    /* position: absolute;
+    top: 12px;
+    right: 15px; */
 }
     
 </style>
