@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Login from '../views/Login.vue'
-import Home from '../views/Home.vue'
+import Login from '../views/Login/Login.vue'
+import Home from '../views/Home/Home.vue'
+import PersonalInformation from '../views/PersonalInformation/PersonalInformation.vue'
+import AppManagement from '../views/AppManagement/AppManagement.vue'
+import UserManagement from '../views/UserManagement/UserManagement.vue'
 
 const routes = [
     {
@@ -16,6 +19,21 @@ const routes = [
         path: '/home',
         name: 'Home',
         component: Home
+    },
+    {
+        path: '/personalInformation',
+        name: 'PersonalInformation',
+        component: PersonalInformation
+    },
+    {
+        path: '/appManagement',
+        name: 'AppManagement',
+        component: AppManagement
+    },
+    {
+        path: '/userManagement',
+        name: 'UserManagement',
+        component: UserManagement
     }
 ]
 

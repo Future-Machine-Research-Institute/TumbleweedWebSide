@@ -7,17 +7,13 @@
             </template>
         </el-input>
         <el-button class = "search-button" type="primary" round >搜索</el-button>
-        <!-- <el-avatar class = "user-avatar" ></el-avatar> -->
         <el-dropdown class = "avatar-container">
-        <el-avatar class = "user-avatar" >
-            <!-- <template #prefix>
-                <el-icon class="el-icon--right" :size = "20"><arrow-down /></el-icon>
-            </template> -->
-        </el-avatar>
+        <el-avatar class = "user-avatar" ></el-avatar>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item >个人信息</el-dropdown-item>
-            <el-dropdown-item divided>app管理</el-dropdown-item>
+            <el-dropdown-item @click = "clickOnPersonalInformation">个人信息</el-dropdown-item>
+            <el-dropdown-item divided @click = "clickOnAppManagement">app管理</el-dropdown-item>
+            <el-dropdown-item divided v-if="showUserManagement" @click = "clickOnUserManagement">用户管理</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -25,22 +21,37 @@
 </template>
 
 <script>
-    import { UserFilled, Search, ArrowDown } from '@element-plus/icons-vue'
+    import { UserFilled, Search } from '@element-plus/icons-vue'
     export default {
         components: {
             UserFilled,
-            Search,
-            ArrowDown
+            Search
         },
         data() {
             return {
                 searchString: "",
-                logoUrl: new URL('.././assets/homeLogo.png', import.meta.url).href
+                logoUrl: new URL('../.././assets/homeLogo.png', import.meta.url).href,
+                showUserManagement: true
             }
+        },
+        methods: {
+
+            clickOnPersonalInformation() {
+                this.$router.push('/personalInformation')
+            },
+
+            clickOnAppManagement() {
+                this.$router.push('/appManagement')
+            },
+
+            clickOnUserManagement() {
+                this.$router.push('/userManagement')
+            }
+
         },
         //生命周期 - 创建完成,访问当前this实例
         created() {
-            
+            // this.showUserManagement = true
         },
         //生命周期 - 挂载完成,访问DOM元素
         mounted() {
@@ -90,22 +101,13 @@
     min-width: 60px;
 }
 
-/* .user-avatar {
-    width: 40px;
-    height: 40px;
-    display: block;
-    position: absolute;
-    top: 12px;
-    right: 15px;
-} */
-
 .avatar-container{
     width: 40px;
     height: 40px;
     display: block;
     position: absolute;
     top: 12px;
-    right: 25px;
+    right: 15px;
 }
 
 .user-avatar {

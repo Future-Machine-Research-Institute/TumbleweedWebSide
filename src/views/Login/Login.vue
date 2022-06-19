@@ -50,16 +50,7 @@
         //方法
         methods: {
             login() {
-                const saltRounds = 10
-                const myPlaintextPassword = 's0/\/\P4$$w0rD'
-                const someOtherPlaintextPassword = 'not_bacon'
-                let result = EDCryptionShareInstance.bcryptHashSync(myPlaintextPassword, saltRounds)
-                let isSame = EDCryptionShareInstance.bcryptCompareSync(someOtherPlaintextPassword, result)
-                if(isSame) {
-                    this.$router.push('/home')
-                } else {
-
-                }
+                this.$router.push('/home')
             }
         },
         //生命周期 - 创建完成,访问当前this实例

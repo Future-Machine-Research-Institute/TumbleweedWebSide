@@ -10,6 +10,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^0.2.7",
     "@future-machine-research-institute/jsbasetools": "github:Future-Machine-Research-Institute/JSBaseTools",
+    "app-info-parser": "^1.1.3",
     "element-plus": "^2.0.2",
     "vue": "^3.2.25",
     "vue-router": "^4.0.12"
