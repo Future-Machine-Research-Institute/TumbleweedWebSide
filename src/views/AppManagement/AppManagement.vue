@@ -1,17 +1,20 @@
 <template>
-    <el-page-header class = "page-head" title="返回" content="App管理" @back="goBack" >
+    <el-page-header class = "head" title="返回" content="App管理" @back="goBack" >
         <template #icon>
             <el-icon><arrow-left /></el-icon>
         </template>
     </el-page-header>
-    <el-divider class = "page-divider" />
+    <el-divider class = "divider" />
+    <app-management-container></app-management-container>
 </template>
 
 <script>
     import { ArrowLeft } from '@element-plus/icons-vue'
+    import AppManagementContainer from './AppManagementContainer.vue'
     export default {
         components: {
-            ArrowLeft
+            ArrowLeft,
+            AppManagementContainer
         },
         data() {
             return {
@@ -38,13 +41,13 @@
 <style scoped>
 /* @import url(); 引入css类 */
 
-.page-head {
+.head {
     height: 64px;
     /* background-color: white; */
     align-items: center;
 }
 
-.page-divider {
+.divider {
     margin: 0px;
 }
     

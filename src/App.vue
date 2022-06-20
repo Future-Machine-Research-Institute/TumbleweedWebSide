@@ -3,6 +3,7 @@
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 import Login from './views/Login/Login.vue';
 import Home from './views/Home/Home.vue';
+import AppManagement from './views/AppManagement/AppManagement.vue';
 
 // export default {
 //   components: {

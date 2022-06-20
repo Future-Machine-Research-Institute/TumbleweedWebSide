@@ -51,6 +51,7 @@
 .container {
     width: 90vw;
     height: calc(100vh - 164px);
+    margin: 0 auto;
 }
     
 </style>
