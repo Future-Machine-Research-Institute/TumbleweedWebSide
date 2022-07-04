@@ -1,18 +1,39 @@
 <template>
   <div class = "main">
 
-    <el-dialog v-model="dialogFormVisible" title="Shipping address">
-    <el-form :model="form">
-      <el-form-item label="Promotion name" >
-        <el-input v-model="dialogFormName" autocomplete="off" type = "file" id = "file" @change="fileSelect"/>
-      </el-form-item>
-      <el-form-item label="Zones" >
-        <el-select v-model="dialogFormRegion" placeholder="Please select a zone">
+    <el-dialog class = "upload-dialog" v-model="dialogFormVisible" title="App包上传" width="100%" top = "0px">
+      <div class = "upload-dialog-body">
+
+        <el-form class = "upload-dialog-form">
+          <el-form-item label="App文件">
+            <el-input v-model="dialogFormName" autocomplete="off" type = "file" id = "file" @change="fileSelect"/>
+          </el-form-item>
+          <el-form-item label="App名称">
+            <el-input/>
+          </el-form-item>
+          <el-form-item label="App版本">
+            <el-input/>
+          </el-form-item>
+        </el-form>
+        <el-form-item label="App系统">
+          <el-select placeholder="请选择系统类型">
+            <el-option label="IOS" value="0" />
+            <el-option label="Android" value="1" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="App进度">
+          <el-radio-group v-model="progress">
+            <el-radio label="正式版" />
+            <el-radio label="测试版" />
+          </el-radio-group>
+        </el-form-item>
+        
+      </div>
+    <!-- <el-input v-model="dialogFormName" autocomplete="off" type = "file" id = "file" @change="fileSelect"/>
+    <el-select v-model="dialogFormRegion" placeholder="Please select a zone">
           <el-option label="Zone No.1" value="shanghai" />
           <el-option label="Zone No.2" value="beijing" />
-        </el-select>
-      </el-form-item>
-    </el-form>
+        </el-select> -->
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogFormVisible = false">Cancel</el-button>
@@ -25,16 +46,14 @@
 
     <el-table class = "container" :data="tableData" max-height="calc(100vh - 400px)">
       <el-table-column type="selection" />
-      <el-table-column fixed prop="date" label="图标" />
-      <el-table-column prop="name" label="名称" />
-      <el-table-column prop="state" label="版本"  />
-      <el-table-column prop="city" label="AppID" />
-      <el-table-column prop="address" label="Address" />
-      <el-table-column prop="zip" label="Zip" />
+      <el-table-column fixed prop="appIcon" label="图标" />
+      <el-table-column prop="appId" label="AppID" />
+      <el-table-column prop="appName" label="名称" />
+      <el-table-column prop="version" label="版本"  />
+      <el-table-column prop="uploadTime" label="上传时间" />
+      <el-table-column prop="lastModifiedTime" label="最近修改时间" />
       <el-table-column fixed="right" label="Operations" >
-        <template #default="scope">
-          <el-button link type="primary" size="small" @click.prevent="deleteRow(scope.$index)">更新</el-button>
-        </template>
+        <el-button link type="primary" size="small" @click="updatePackage">更新</el-button>
       </el-table-column>
     </el-table>
 
@@ -73,80 +92,42 @@
               dialogFormVisible: false,
               dialogFormName: "",
               dialogFormRegion:"",
-                tableData: [
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-  },
-]
+              progress: "",
+                tableData: 
+                [
+                  {
+                    appIcon: '2016-05-01',
+                    appId: 'cajsnklmdlasadasdasda',
+                    appName: 'California',
+                    version: '1.0.1',
+                    uploadTime: '2016-05-01',
+                    lastModifiedTime: '2016-05-01',
+                  },
+                  {
+                    appIcon: '2016-05-01',
+                    appId: 'cajsnklmdlasadasdasda',
+                    appName: 'California',
+                    version: '1.0.1',
+                    uploadTime: '2016-05-01',
+                    lastModifiedTime: '2016-05-01',
+                  },
+                  {
+                    appIcon: '2016-05-01',
+                    appId: 'cajsnklmdlasadasdasda',
+                    appName: 'California',
+                    version: '1.0.1',
+                    uploadTime: '2016-05-01',
+                    lastModifiedTime: '2016-05-01',
+                  },
+                  {
+                    appIcon: '2016-05-01',
+                    appId: 'cajsnklmdlasadasdasda',
+                    appName: 'California',
+                    version: '1.0.1',
+                    uploadTime: '2016-05-01',
+                    lastModifiedTime: '2016-05-01',
+                  }
+                ]
             }
         },
         //方法
@@ -160,6 +141,9 @@
   }).catch(err => {
     console.log('err ----> ', err)
   })
+            },
+            updatePackage () {
+              console.log("updatePackage")
             }
         },
         //生命周期 - 创建完成,访问当前this实例
@@ -218,5 +202,13 @@
   left: 0vw;
 }
 
+/* .upload-dialog {
+  width: 30%;
+} */
+.upload-dialog-body {
+  width: 100%;
+  height: 30vh;
+  /* background-color: black; */
+}
 
 </style>

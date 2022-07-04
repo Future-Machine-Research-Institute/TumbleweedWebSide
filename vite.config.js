@@ -15,7 +15,7 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     })
   ],
-  // define: {
-  //   'process.env': {}
-  // }
+  define: {
+    'process.env': {}
+  }
 })
