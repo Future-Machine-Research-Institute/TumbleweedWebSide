@@ -14,19 +14,19 @@
           <el-form-item label="App版本">
             <el-input/>
           </el-form-item>
-        </el-form>
-        <el-form-item label="App系统">
+          <el-form-item label="App系统">
           <el-select placeholder="请选择系统类型">
             <el-option label="IOS" value="0" />
             <el-option label="Android" value="1" />
           </el-select>
-        </el-form-item>
-        <el-form-item label="App进度">
+          </el-form-item>
+          <el-form-item label="App进度">
           <el-radio-group v-model="progress">
             <el-radio label="正式版" />
             <el-radio label="测试版" />
           </el-radio-group>
         </el-form-item>
+        </el-form>
         
       </div>
     <!-- <el-input v-model="dialogFormName" autocomplete="off" type = "file" id = "file" @change="fileSelect"/>
@@ -36,9 +36,9 @@
         </el-select> -->
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Cancel</el-button>
+        <el-button @click="dialogFormVisible = false">取消</el-button>
         <el-button type="primary" @click="dialogFormVisible = false"
-          >Confirm</el-button
+          >上传</el-button
         >
       </span>
     </template>
