@@ -81,7 +81,7 @@
 
 <script>
   import { Search } from '@element-plus/icons-vue'
-  import AppInfoParser from "app-info-parser" 
+  import { readPkgInfo } from '../../util/app-package-parser'
     export default {
         components: {
             Search
@@ -132,15 +132,20 @@
         },
         //方法
         methods: {
-            fileSelect() {
-              const files = document.getElementById('file').files
-              const parser = new AppInfoParser(files[0])
-              parser.parse().then(result => {
-    console.log('app info ----> ', result)
-    console.log('icon base64 ----> ', result.icon)
-  }).catch(err => {
-    console.log('err ----> ', err)
-  })
+            async fileSelect() {
+              const file = document.getElementById('file').files[0]
+              // let fileUrl = null
+              // if (window.createObjcectURL != undefined) {
+              //   fileUrl = window.createOjcectURL(file);
+              // } else if (window.URL != undefined) {
+              //   fileUrl = window.URL.createObjectURL(file);
+              // } else if (window.webkitURL != undefined) {
+              //   fileUrl = window.webkitURL.createObjectURL(file);
+              // }
+              // console.log("fileUrl: ", fileUrl)
+              // const { readPkgInfo } = PkgReader;
+              let apkInfo = await readPkgInfo(file);
+              console.log(apkInfo);
             },
             updatePackage () {
               console.log("updatePackage")
