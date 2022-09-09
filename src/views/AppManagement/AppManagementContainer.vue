@@ -1,80 +1,77 @@
 <template>
-  <div class = "main">
+  <div class="main">
 
-    <el-dialog class = "upload-dialog" v-model="dialogFormVisible" title="App包上传" width="100%" top = "0px">
-      <div class = "upload-dialog-body">
+    <el-dialog v-model="dialogFormVisible" title="App包上传" width="100%" top="0px">
+      <div class="upload-dialog-body">
 
-        <el-form class = "upload-dialog-form">
+        <el-form class="upload-dialog-form">
           <el-form-item label="App文件">
-            <el-input v-model="dialogFormName" autocomplete="off" type = "file" id = "file" @change="fileSelect"/>
+            <!-- @change="fileSelect" -->
+            <el-input v-model="dialogFormFileName" autocomplete="off" type="file" id="file" />
           </el-form-item>
           <el-form-item label="App名称">
-            <el-input/>
+            <el-input v-model="dialogFormAppName" />
           </el-form-item>
           <el-form-item label="App版本">
-            <el-input/>
+            <el-input v-model="dialogFormAppVersion" />
           </el-form-item>
           <el-form-item label="App系统">
-          <el-select placeholder="请选择系统类型">
-            <el-option label="IOS" value="0" />
-            <el-option label="Android" value="1" />
-          </el-select>
+            <el-select v-model="dialogFormAppSystem" placeholder="请选择系统类型">
+              <el-option label="IOS" :value="0" />
+              <el-option label="Android" :value="1" />
+            </el-select>
           </el-form-item>
           <el-form-item label="App进度">
-          <el-radio-group v-model="progress">
-            <el-radio label="正式版" />
-            <el-radio label="测试版" />
-          </el-radio-group>
-        </el-form-item>
+            <el-radio-group v-model="dialogFormProgress">
+              <el-radio label="正式版" />
+              <el-radio label="测试版" />
+            </el-radio-group>
+          </el-form-item>
         </el-form>
-        
-      </div>
-    <!-- <el-input v-model="dialogFormName" autocomplete="off" type = "file" id = "file" @change="fileSelect"/>
-    <el-select v-model="dialogFormRegion" placeholder="Please select a zone">
-          <el-option label="Zone No.1" value="shanghai" />
-          <el-option label="Zone No.2" value="beijing" />
-        </el-select> -->
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false"
-          >上传</el-button
-        >
-      </span>
-    </template>
-  </el-dialog>
 
-    <el-table class = "container" :data="tableData" max-height="calc(100vh - 400px)">
+      </div>
+      
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" @click="dialogFormVisible = false">上传</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <el-table class="container" :data="tableData" max-height="calc(100vh - 400px)">
       <el-table-column type="selection" />
       <el-table-column fixed prop="appIcon" label="图标" />
       <el-table-column prop="appId" label="AppID" />
       <el-table-column prop="appName" label="名称" />
-      <el-table-column prop="version" label="版本"  />
+      <el-table-column prop="version" label="版本" />
       <el-table-column prop="uploadTime" label="上传时间" />
       <el-table-column prop="lastModifiedTime" label="最近修改时间" />
-      <el-table-column fixed="right" label="Operations" >
+      <el-table-column fixed="right" label="Operations">
         <el-button link type="primary" size="small" @click="updatePackage">更新</el-button>
       </el-table-column>
     </el-table>
 
-    <el-input class = "search-input" type = "text" v-model = "searchString" >
+    <el-input class="search-input" type="text" v-model="inputSearch">
       <template #prepend>
-        <el-select v-model="selectString" placeholder="Select" style="width: 100px">
+        <el-select v-model="inputSelect" placeholder="Select" style="width: 100px">
           <el-option label="App名称" value="1" />
           <el-option label="AppID" value="2" />
         </el-select>
       </template>
       <template #append>
-        <el-button >
-          <el-icon ><Search /></el-icon>
+        <el-button>
+          <el-icon>
+            <Search />
+          </el-icon>
         </el-button>
       </template>
     </el-input>
 
 
-    <el-button class = "upload-button" @click="dialogFormVisible = true">上传</el-button>
-    <el-button class = "delete-button" >删除</el-button>
-    
+    <el-button class="upload-button" @click="dialogFormVisible = true">上传</el-button>
+    <el-button class="delete-button">删除</el-button>
+
 
   </div>
 </template>
@@ -88,12 +85,15 @@
         },
         data() {
             return {
-              selectString: "",
               dialogFormVisible: false,
-              dialogFormName: "",
-              dialogFormRegion:"",
-              progress: "",
-                tableData: 
+              dialogFormFileName: "",
+              dialogFormAppName: "",
+              dialogFormAppVersion: "",
+              dialogFormAppSystem: null,
+              dialogFormProgress: "",
+              inputSearch: "",
+              inputSelect: "",
+              tableData:
                 [
                   {
                     appIcon: '2016-05-01',
@@ -132,21 +132,21 @@
         },
         //方法
         methods: {
-            async fileSelect() {
-              const file = document.getElementById('file').files[0]
-              // let fileUrl = null
-              // if (window.createObjcectURL != undefined) {
-              //   fileUrl = window.createOjcectURL(file);
-              // } else if (window.URL != undefined) {
-              //   fileUrl = window.URL.createObjectURL(file);
-              // } else if (window.webkitURL != undefined) {
-              //   fileUrl = window.webkitURL.createObjectURL(file);
-              // }
-              // console.log("fileUrl: ", fileUrl)
-              // const { readPkgInfo } = PkgReader;
-              let apkInfo = await readPkgInfo(file);
-              console.log(apkInfo);
-            },
+            // async fileSelect() {
+            //   const file = document.getElementById('file').files[0]
+            //   // let fileUrl = null
+            //   // if (window.createObjcectURL != undefined) {
+            //   //   fileUrl = window.createOjcectURL(file);
+            //   // } else if (window.URL != undefined) {
+            //   //   fileUrl = window.URL.createObjectURL(file);
+            //   // } else if (window.webkitURL != undefined) {
+            //   //   fileUrl = window.webkitURL.createObjectURL(file);
+            //   // }
+            //   // console.log("fileUrl: ", fileUrl)
+            //   // const { readPkgInfo } = PkgReader;
+            //   let apkInfo = await readPkgInfo(file);
+            //   console.log(apkInfo);
+            // },
             updatePackage () {
               console.log("updatePackage")
             }
