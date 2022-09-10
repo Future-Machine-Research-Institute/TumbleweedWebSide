@@ -11,6 +11,7 @@
     "@element-plus/icons-vue": "^0.2.7",
     "@future-machine-research-institute/cgbidecompress": "github:Future-Machine-Research-Institute/CgBIDecompress",
     "@future-machine-research-institute/jsbasetools": "github:Future-Machine-Research-Institute/JSBaseTools",
+    "axios": "^0.27.2",
     "bytebuffer": "^5.0.1",
     "element-plus": "^2.0.2",
     "isomorphic-unzip": "^1.1.5",

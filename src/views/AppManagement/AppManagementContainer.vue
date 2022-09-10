@@ -70,7 +70,7 @@
 
 
     <el-button class="upload-button" @click="dialogFormVisible = true">上传</el-button>
-    <el-button class="delete-button">删除</el-button>
+    <el-button class="delete-button" @click="deletePackage">删除</el-button>
 
 
   </div>
@@ -78,7 +78,8 @@
 
 <script>
   import { Search } from '@element-plus/icons-vue'
-  import { readPkgInfo } from '../../util/app-package-parser'
+  import NetApiShareInstance from '../../net/net-api'
+  // import { readPkgInfo } from '../../util/app-package-parser'
     export default {
         components: {
             Search
@@ -149,7 +150,12 @@
             // },
             updatePackage () {
               console.log("updatePackage")
+            },
+
+            deletePackage() {
+              NetApiShareInstance.test({"data": "test", "params": 1})
             }
+
         },
         //生命周期 - 创建完成,访问当前this实例
         created() {
