@@ -2,11 +2,8 @@
     <el-image class = "logo-image" :src = "logoUrl" >
 
     </el-image>
-    <el-form class = "login-form">
-            <!-- <el-form-item class = "login-item">
-                <el-image></el-image>    
-            </el-form-item> -->
-        <el-form-item class = "account-item">
+    <el-form class = "login-form" ref = "form" :model = "form" :rules = "rules">
+        <el-form-item class = "account-item" prop = "account">
             <el-input type = "text" placeholder = "请输入账号" :prefix-icon = "User" clearable = "true" v-model = "form.account">
                 <template #prefix>
                     <el-icon class = "el-input__icon"><user /></el-icon>
@@ -14,7 +11,7 @@
             </el-input>
         </el-form-item>
 
-        <el-form-item class = "password-item">
+        <el-form-item class = "password-item" prop = "password">
             <el-input type = "password" placeholder = "请输入密码" :prefix-icon = "Lock" clearable = "true" v-model = "form.password">
                 <template #prefix>
                     <el-icon class = "el-input__icon"><lock /></el-icon>
@@ -31,7 +28,7 @@
 <script>
     import { User,Lock } from '@element-plus/icons-vue'
     // import router from '../router/router'
-    import EDCryptionShareInstance from '@future-machine-research-institute/jsbasetools/edcryption'
+    // import EDCryptionShareInstance from '@future-machine-research-institute/jsbasetools/edcryption'
 
     export default {
         components: {
@@ -40,17 +37,45 @@
         },
         data() {
             return {
-                logoUrl: new URL('.././assets/logo.png', import.meta.url).href,
+                logoUrl: new URL('../.././assets/logo.png', import.meta.url).href,
                 form: {
                     account: "",
                     password: ""
+                },
+                rules: {
+                    account: [
+                        {
+                            required: true,
+                            message: "请输入账号"
+                        },
+                        {
+                            pattern: /^1[3456789]\d{9}$/,
+                            message: "请输入正确的手机号"
+                        }
+                    ],
+                    password: [
+                        {
+                            required: true,
+                            message: "请输入密码"
+                        },
+                        {
+                            pattern: /^[^@#!*$^%& ]{8,20}$/,
+                            message: "密码长度必须在8-20位以内, 且不能包含特殊字符和空格号"
+                        }
+                    ]
                 }
             }
         },
         //方法
         methods: {
             login() {
-                this.$router.push('/home')
+                this.$refs.form.validate((isok) => {
+                    if(isok) {
+                        this.$router.push('/home')
+                    } else {
+                        alert("数据不合法！")
+                    }
+                })
             }
         },
         //生命周期 - 创建完成,访问当前this实例

@@ -8,7 +8,7 @@ import UserManagement from '../views/UserManagement/UserManagement.vue'
 const routes = [
     {
         path:'/',
-        redirect:'/home'
+        redirect:'/login'
     },
     {
         path: '/login',
