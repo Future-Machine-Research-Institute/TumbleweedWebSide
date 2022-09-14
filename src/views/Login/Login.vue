@@ -27,6 +27,9 @@
 
 <script>
     import { User,Lock } from '@element-plus/icons-vue'
+    import { storeAccount, readAccount, removeAccount, storePassword, readPassword, removePassword } from '../../utils/utils'
+    import { ElLoading } from 'element-plus'
+    import 'element-plus/theme-chalk/el-loading.css'
     // import router from '../router/router'
     // import EDCryptionShareInstance from '@future-machine-research-institute/jsbasetools/edcryption'
 
@@ -71,6 +74,7 @@
             login() {
                 this.$refs.form.validate((isok) => {
                     if(isok) {
+                        ElLoading.service({ fullscreen: true })
                         this.$router.push('/home')
                     } else {
                         alert("数据不合法！")
@@ -84,7 +88,7 @@
         },
         //生命周期 - 挂载完成,访问DOM元素
         mounted() {
-            
+            // ElLoading.service({ fullscreen: true })
         }
     }
 </script>
@@ -116,7 +120,7 @@ html,body{
     position: relative;
     top: 15vh;
     margin: 0 auto;
-    min-width: 307px;
+    min-width: 280px;
     min-height: 260px;
     /* padding: 20px; */
     /* border: 0.2px solid lightgray;
