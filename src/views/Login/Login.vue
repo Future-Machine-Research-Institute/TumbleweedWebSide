@@ -4,17 +4,17 @@
     </el-image>
     <el-form class = "login-form" ref = "form" :model = "form" :rules = "rules">
         <el-form-item class = "account-item" prop = "account">
-            <el-input type = "text" placeholder = "请输入账号" :prefix-icon = "User" clearable = "true" v-model = "form.account">
+            <el-input type = "text" placeholder = "请输入账号" clearable v-model = "form.account">
                 <template #prefix>
-                    <el-icon class = "el-input__icon"><user /></el-icon>
+                    <el-icon class = "el-input__icon"><User /></el-icon>
                 </template>
             </el-input>
         </el-form-item>
 
         <el-form-item class = "password-item" prop = "password">
-            <el-input type = "password" placeholder = "请输入密码" :prefix-icon = "Lock" clearable = "true" v-model = "form.password">
+            <el-input type = "password" placeholder = "请输入密码" clearable v-model = "form.password">
                 <template #prefix>
-                    <el-icon class = "el-input__icon"><lock /></el-icon>
+                    <el-icon class = "el-input__icon"><Lock /></el-icon>
                 </template>
             </el-input>
         </el-form-item>
@@ -27,9 +27,10 @@
 
 <script>
     import { User,Lock } from '@element-plus/icons-vue'
-    import { storeAccount, readAccount, removeAccount, storePassword, readPassword, removePassword } from '../../utils/utils'
+    import { storeAccount, readAccount, removeAccount, storeTokenKey, readTokenKey, removeTokenKey } from '../../utils/utils'
     import { ElLoading } from 'element-plus'
     import 'element-plus/theme-chalk/el-loading.css'
+    import NetApiShareInstance from '../../net/net-api'
     // import router from '../router/router'
     // import EDCryptionShareInstance from '@future-machine-research-institute/jsbasetools/edcryption'
 
@@ -74,7 +75,7 @@
             login() {
                 this.$refs.form.validate((isok) => {
                     if(isok) {
-                        ElLoading.service({ fullscreen: true })
+                        // ElLoading.service({ fullscreen: true })
                         this.$router.push('/home')
                     } else {
                         alert("数据不合法！")
@@ -88,7 +89,14 @@
         },
         //生命周期 - 挂载完成,访问DOM元素
         mounted() {
-            // ElLoading.service({ fullscreen: true })
+            // const loadingInstance = ElLoading.service({ fullscreen: true })
+            // NetApiShareInstance.checkToken("17826805865", "1111dasdsa").then((res) => {
+            //     console.log("res: ", res.data)
+            //     loadingInstance.close()
+            // }).catch((err) => {
+            //     console.log("err: ", err)
+            //     loadingInstance.close()
+            // })
         }
     }
 </script>

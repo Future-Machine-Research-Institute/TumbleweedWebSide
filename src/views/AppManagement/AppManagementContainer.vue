@@ -153,7 +153,7 @@
             },
 
             deletePackage() {
-              NetApiShareInstance.test({"data": "test", "params": 1})
+              NetApiShareInstance.test({"account": "17826805865", "token": "1111"})
             }
 
         },

@@ -2,13 +2,14 @@ import { store, read, remove } from "../third-party/persistence/persistence";
 
 const accountKey = "AccountKey"
 const passwordKey = "PasswordKey"
+const tokenKey = "TokenKey"
 
 const storeAccount = (valueString) => {
     store(accountKey, valueString)
 }
 
 const readAccount = () => {
-    read(accountKey)
+    return read(accountKey)
 }
 
 const removeAccount = () => {
@@ -20,14 +21,36 @@ const storePassword = (valueString) => {
 }
 
 const readPassword = () => {
-    read(passwordKey)
+    return read(passwordKey)
 }
 
 const removePassword = () => {
     remove(passwordKey)
 }
 
-export {storeAccount, readAccount, removeAccount, storePassword, readPassword, removePassword}
+const storeTokenKey = (valueString) => {
+    store(tokenKey, valueString)
+}
+
+const readTokenKey = () => {
+    return read(tokenKey)
+}
+
+const removeTokenKey = () => {
+    remove(tokenKey)
+}
+
+export {
+    storeAccount, 
+    readAccount, 
+    removeAccount, 
+    storePassword, 
+    readPassword, 
+    removePassword,
+    storeTokenKey,
+    readTokenKey,
+    removeTokenKey
+}
 
 
 
