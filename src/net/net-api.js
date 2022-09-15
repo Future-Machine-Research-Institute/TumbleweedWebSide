@@ -5,6 +5,7 @@ axios.defaults.timeout = 30000;
 
 const testUrl = "/users/test"
 const checkTokenUrl = "/users/authorize"
+const userLoginUrl = "/users/login"
 
 // const accountKey = "account"
 // const passwordKey = "password"
@@ -33,8 +34,23 @@ class NetApi {
     checkToken(account, token) {
         return new Promise(async (resolve, reject) => {
             try {
-                let data = {"account": account, "token": token}
+                let data = {account: account, token: token}
                 axios.post(checkTokenUrl, data).then((res) => {
+                    resolve(res)
+                }).catch((err) => {
+                    reject(err)
+                })
+            } catch (error) {
+                reject(error)
+            }
+        })
+    }
+
+    userLogin(account, password) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let data = {account: account, password: password}
+                axios.post(userLoginUrl, data).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)

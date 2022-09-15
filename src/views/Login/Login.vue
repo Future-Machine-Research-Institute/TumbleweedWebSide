@@ -27,12 +27,11 @@
 
 <script>
     import { User,Lock } from '@element-plus/icons-vue'
-    import { storeAccount, readAccount, removeAccount, storeTokenKey, readTokenKey, removeTokenKey } from '../../utils/utils'
-    import { ElLoading } from 'element-plus'
-    import 'element-plus/theme-chalk/el-loading.css'
+    import { storeAccount, readAccount, removeAccount, storeTokenKey, readTokenKey, removeTokenKey, md5HashSync } from '../../utils/utils'
     import NetApiShareInstance from '../../net/net-api'
+    import { loadingViewShow, loadingViewDismiss } from '../../utils/loading-view'
+    import { successNotificationShow, errorNotificationShow} from '../../utils/notification-view'
     // import router from '../router/router'
-    // import EDCryptionShareInstance from '@future-machine-research-institute/jsbasetools/edcryption'
 
     export default {
         components: {
@@ -75,8 +74,21 @@
             login() {
                 this.$refs.form.validate((isok) => {
                     if(isok) {
-                        // ElLoading.service({ fullscreen: true })
-                        this.$router.push('/home')
+                        loadingViewShow()
+                        NetApiShareInstance.userLogin(this.form.account, md5HashSync(this.form.password)).then((res) => {
+                            loadingViewDismiss()
+                            if (res.data.ret === 0) {
+                                storeAccount(this.form.account)
+                                storeTokenKey(res.data.token)
+                                this.$router.push('/home')
+                                successNotificationShow("登录成功")
+                            } else {
+                                errorNotificationShow("登录失败", res.data.message)
+                            }
+                        }).catch((err) => {
+                            loadingViewDismiss()
+                            errorNotificationShow("请求失败", err.message)
+                        })
                     } else {
                         alert("数据不合法！")
                     }
@@ -89,14 +101,16 @@
         },
         //生命周期 - 挂载完成,访问DOM元素
         mounted() {
-            // const loadingInstance = ElLoading.service({ fullscreen: true })
-            // NetApiShareInstance.checkToken("17826805865", "1111dasdsa").then((res) => {
-            //     console.log("res: ", res.data)
-            //     loadingInstance.close()
-            // }).catch((err) => {
-            //     console.log("err: ", err)
-            //     loadingInstance.close()
-            // })
+            loadingViewShow()
+            NetApiShareInstance.checkToken(readAccount(), readTokenKey()).then((res) => {
+                loadingViewDismiss()
+                if(res.data.ret === 0) {
+                    this.$router.push('/home')
+                }
+            }).catch((err) => {
+                loadingViewDismiss()
+                errorNotificationShow("请求失败", err.message)
+            })
         }
     }
 </script>

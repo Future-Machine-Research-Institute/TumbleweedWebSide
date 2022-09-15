@@ -1,4 +1,5 @@
 import { store, read, remove } from "../third-party/persistence/persistence";
+import md5 from "js-md5";
 
 const accountKey = "AccountKey"
 const passwordKey = "PasswordKey"
@@ -40,6 +41,10 @@ const removeTokenKey = () => {
     remove(tokenKey)
 }
 
+const md5HashSync = (rawString) => {
+    return md5(rawString)
+}
+
 export {
     storeAccount, 
     readAccount, 
@@ -49,7 +54,8 @@ export {
     removePassword,
     storeTokenKey,
     readTokenKey,
-    removeTokenKey
+    removeTokenKey,
+    md5HashSync
 }
 
 
