@@ -4,34 +4,35 @@ import Home from '../views/Home/Home.vue'
 import PersonalInformation from '../views/PersonalInformation/PersonalInformation.vue'
 import AppManagement from '../views/AppManagement/AppManagement.vue'
 import UserManagement from '../views/UserManagement/UserManagement.vue'
+import { LoginView, HomeView, PersonalInformationView, AppManagementView, UserManagementView } from './router-config'
 
 const routes = [
     {
         path:'/',
-        redirect:'/login'
+        redirect: LoginView
     },
     {
-        path: '/login',
+        path: LoginView,
         name: 'Login',
         component: Login
     },
     {
-        path: '/home',
+        path: HomeView,
         name: 'Home',
         component: Home
     },
     {
-        path: '/personalInformation',
+        path: PersonalInformationView,
         name: 'PersonalInformation',
         component: PersonalInformation
     },
     {
-        path: '/appManagement',
+        path: AppManagementView,
         name: 'AppManagement',
         component: AppManagement
     },
     {
-        path: '/userManagement',
+        path: UserManagementView,
         name: 'UserManagement',
         component: UserManagement
     }

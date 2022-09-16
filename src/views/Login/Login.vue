@@ -1,10 +1,13 @@
 <template>
+    <el-select v-model="this.$i18n.locale" placeholder="lang">
+        <el-option v-for="locale in this.$i18n.availableLocales" :key="`locale-${locale}`" :value="locale" >{{ locale }}</el-option>
+    </el-select>
     <el-image class = "logo-image" :src = "logoUrl" >
 
     </el-image>
     <el-form class = "login-form" ref = "form" :model = "form" :rules = "rules">
         <el-form-item class = "account-item" prop = "account">
-            <el-input type = "text" placeholder = "请输入账号" clearable v-model = "form.account">
+            <el-input type = "text" :placeholder = "$t('login.accountInputTipsText')" clearable v-model = "form.account">
                 <template #prefix>
                     <el-icon class = "el-input__icon"><User /></el-icon>
                 </template>
@@ -12,7 +15,7 @@
         </el-form-item>
 
         <el-form-item class = "password-item" prop = "password">
-            <el-input type = "password" placeholder = "请输入密码" clearable v-model = "form.password">
+            <el-input type = "password" :placeholder = "$t('login.passwordInputTipsText')" clearable v-model = "form.password">
                 <template #prefix>
                     <el-icon class = "el-input__icon"><Lock /></el-icon>
                 </template>
@@ -20,7 +23,7 @@
         </el-form-item>
 
         <el-form-item class = "enter-item">
-            <el-button type = "primary" @click = "login">登录</el-button>
+            <el-button type = "primary" @click = "login">{{$t('login.loginButtonText')}}</el-button>
         </el-form-item>
     </el-form>
 </template>
@@ -31,7 +34,8 @@
     import NetApiShareInstance from '../../net/net-api'
     import { loadingViewShow, loadingViewDismiss } from '../../utils/loading-view'
     import { successNotificationShow, errorNotificationShow} from '../../utils/notification-view'
-    // import router from '../router/router'
+    import { errorMessageShow } from '../../utils/message-view'
+    import { HomeView } from '../../router/router-config'
 
     export default {
         components: {
@@ -45,25 +49,51 @@
                     account: "",
                     password: ""
                 },
-                rules: {
+                // rules: {
+                //     account: [
+                //         {
+                //             required: true,
+                //             message: this.$t('login.accountInputTipsText')
+                //         },
+                //         {
+                //             pattern: /^1[3456789]\d{9}$/,
+                //             message: this.$t('login.accountInputIllegalText')
+                //         }
+                //     ],
+                //     password: [
+                //         {
+                //             required: true,
+                //             message: this.$t('login.passwordInputTipsText')
+                //         },
+                //         {
+                //             pattern: /^[^@#!*$^%& ]{8,20}$/,
+                //             message: this.$t('login.passwordInputIllegalText')
+                //         }
+                //     ]
+                // }
+            }
+        },
+        computed: {
+            rules() {
+                return {
                     account: [
                         {
                             required: true,
-                            message: "请输入账号"
+                            message: this.$t('login.accountInputTipsText')
                         },
                         {
                             pattern: /^1[3456789]\d{9}$/,
-                            message: "请输入正确的手机号"
+                            message: this.$t('login.accountInputIllegalText')
                         }
                     ],
                     password: [
                         {
                             required: true,
-                            message: "请输入密码"
+                            message: this.$t('login.passwordInputTipsText')
                         },
                         {
                             pattern: /^[^@#!*$^%& ]{8,20}$/,
-                            message: "密码长度必须在8-20位以内, 且不能包含特殊字符和空格号"
+                            message: this.$t('login.passwordInputIllegalText')
                         }
                     ]
                 }
@@ -80,17 +110,17 @@
                             if (res.data.ret === 0) {
                                 storeAccount(this.form.account)
                                 storeTokenKey(res.data.token)
-                                this.$router.push('/home')
-                                successNotificationShow("登录成功")
+                                this.$router.push(HomeView)
+                                successNotificationShow(this.$t('login.loginSuccessNotificationText'))
                             } else {
-                                errorNotificationShow("登录失败", res.data.message)
+                                errorNotificationShow(this.$t('login.loginFailedNotificationText'), res.data.message)
                             }
                         }).catch((err) => {
                             loadingViewDismiss()
-                            errorNotificationShow("请求失败", err.message)
+                            errorNotificationShow(this.$t('login.requestFailedText'), err.message)
                         })
                     } else {
-                        alert("数据不合法！")
+                        errorMessageShow(this.$t('login.loginDataInvalidText'))
                     }
                 })
             }
@@ -105,11 +135,11 @@
             NetApiShareInstance.checkToken(readAccount(), readTokenKey()).then((res) => {
                 loadingViewDismiss()
                 if(res.data.ret === 0) {
-                    this.$router.push('/home')
+                    this.$router.push(HomeView)
                 }
             }).catch((err) => {
                 loadingViewDismiss()
-                errorNotificationShow("请求失败", err.message)
+                errorNotificationShow(this.$t('login.requestFailedText'), err.message)
             })
         }
     }
