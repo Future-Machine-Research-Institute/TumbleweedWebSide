@@ -2,12 +2,14 @@
   <div class="main">
 
     <el-dialog v-model="dialogFormVisible" title="App包上传" width="100%" top="0px">
+      <div v-if="isShowUploadProgress" class="upload-progress-container">
+        <el-progress class="upload-progress" type="circle" :percentage="uploadPercentage" />
+      </div>
       <div class="upload-dialog-body">
 
         <el-form class="upload-dialog-form">
           <el-form-item label="App文件">
-            <!-- @change="fileSelect" -->
-            <el-input v-model="dialogFormFileName" autocomplete="off" type="file" id="file" />
+            <el-input v-model="dialogFormFileName" autocomplete="off" type="file" id="file" accept=".apk,.ipa" @change="fileSelect" />
           </el-form-item>
           <el-form-item label="App名称">
             <el-input v-model="dialogFormAppName" />
@@ -34,7 +36,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">上传</el-button>
+          <el-button type="primary" @click="uploadPackage">上传</el-button>
         </span>
       </template>
     </el-dialog>
@@ -78,14 +80,16 @@
 
 <script>
   import { Search } from '@element-plus/icons-vue'
-  import NetApiShareInstance from '../../net/net-api'
-  // import { readPkgInfo } from '../../util/app-package-parser'
+  import { readPkgInfo } from '../../third-party/app-package-parser'
+
     export default {
         components: {
             Search
         },
         data() {
             return {
+              isShowUploadProgress: false,
+              uploadPercentage: 0,
               dialogFormVisible: false,
               dialogFormFileName: "",
               dialogFormAppName: "",
@@ -133,27 +137,24 @@
         },
         //方法
         methods: {
-            // async fileSelect() {
-            //   const file = document.getElementById('file').files[0]
-            //   // let fileUrl = null
-            //   // if (window.createObjcectURL != undefined) {
-            //   //   fileUrl = window.createOjcectURL(file);
-            //   // } else if (window.URL != undefined) {
-            //   //   fileUrl = window.URL.createObjectURL(file);
-            //   // } else if (window.webkitURL != undefined) {
-            //   //   fileUrl = window.webkitURL.createObjectURL(file);
-            //   // }
-            //   // console.log("fileUrl: ", fileUrl)
-            //   // const { readPkgInfo } = PkgReader;
-            //   let apkInfo = await readPkgInfo(file);
-            //   console.log(apkInfo);
-            // },
+
+            async fileSelect() {
+              const file = document.getElementById('file').files[0]
+              let apkInfo = await readPkgInfo(file);
+              console.log(apkInfo);
+            },
+
+            uploadPackage() {
+              console.log("uploadPackage")
+              this.isShowUploadProgress = true
+            },
+
             updatePackage () {
               console.log("updatePackage")
             },
 
             deletePackage() {
-              NetApiShareInstance.test({"account": "17826805865", "token": "1111"})
+              
             }
 
         },
@@ -164,7 +165,11 @@
         //生命周期 - 挂载完成,访问DOM元素
         mounted() {
             
-        }
+        },
+        unmounted() {
+          console.log("AppManagerContainer -- delloc")
+        },
+        
     }
 </script>
 
@@ -220,6 +225,30 @@
   width: 100%;
   height: 30vh;
   /* background-color: black; */
+}
+
+.upload-progress-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999999;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.upload-progress {
+  /* width: 50vw;
+  height: 50vw;
+  max-height: 100%; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 </style>
