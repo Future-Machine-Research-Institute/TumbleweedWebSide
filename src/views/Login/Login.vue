@@ -1,5 +1,5 @@
 <template>
-    <el-select v-model="languageString" placeholder="lang" @change="changeLanguage">
+    <el-select class = "language-select" v-model="languageString" placeholder="lang" @change="changeLanguage">
         <el-option v-for="locale in $i18n.availableLocales" :key="`locale-${locale}`" :value="locale" :label = "$t(`language.${locale}`)">{{ $t(`language.${locale}`) }}</el-option>
     </el-select>
     <el-image class = "logo-image" :src = "logoUrl" >
@@ -216,6 +216,14 @@ html,body{
 .password-item :deep(.el-form-item__error) {
     top: 70%;
     text-align: left;
+}
+
+.language-select {
+    width: 5vw;
+    min-width: 90px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
     
 </style>
