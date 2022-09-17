@@ -1,7 +1,7 @@
 import { createI18n } from "vue-i18n";
 import zh from "./zh"
 import en from "./en"
-import { read } from "../third-party/persistence/persistence";
+import { readLanguage } from "../utils/utils";
 
 const messages = {
     en,
@@ -11,7 +11,7 @@ const messages = {
 const language = (navigator.language || 'en').toLocaleLowerCase()
 const i18n = createI18n({
     legacy: true,
-    locale: read('lang') || language.split('-')[0] || 'en',
+    locale: readLanguage() || language.split('-')[0] || 'en',
     fallbackLocale: 'en',
     messages
 })

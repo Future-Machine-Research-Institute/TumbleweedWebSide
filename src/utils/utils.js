@@ -4,6 +4,7 @@ import md5 from "js-md5";
 const accountKey = "AccountKey"
 const passwordKey = "PasswordKey"
 const tokenKey = "TokenKey"
+const languageKey = "LanguageKey"
 
 const storeAccount = (valueString) => {
     store(accountKey, valueString)
@@ -29,20 +30,32 @@ const removePassword = () => {
     remove(passwordKey)
 }
 
-const storeTokenKey = (valueString) => {
+const storeToken = (valueString) => {
     store(tokenKey, valueString)
 }
 
-const readTokenKey = () => {
+const readToken = () => {
     return read(tokenKey)
 }
 
-const removeTokenKey = () => {
+const removeToken = () => {
     remove(tokenKey)
 }
 
 const md5HashSync = (rawString) => {
     return md5(rawString)
+}
+
+const storeLanguage = (valueString) => {
+    store(languageKey, valueString)
+}
+
+const readLanguage = () => {
+    return read(languageKey)
+}
+
+const removeLanguage = () => {
+    remove(languageKey)
 }
 
 export {
@@ -52,10 +65,13 @@ export {
     storePassword, 
     readPassword, 
     removePassword,
-    storeTokenKey,
-    readTokenKey,
-    removeTokenKey,
-    md5HashSync
+    storeToken,
+    readToken,
+    removeToken,
+    md5HashSync,
+    storeLanguage,
+    readLanguage,
+    removeLanguage
 }
 
 

@@ -1,5 +1,9 @@
 
 export default {
+    language: {
+        zh: "Chinese",
+        en: "English"
+    },
     login: {
         accountInputTipsText: "Please enter account",
         passwordInputTipsText: "Please enter password",

@@ -1,6 +1,6 @@
 <template>
-    <el-select v-model="this.$i18n.locale" placeholder="lang">
-        <el-option v-for="locale in this.$i18n.availableLocales" :key="`locale-${locale}`" :value="locale" >{{ locale }}</el-option>
+    <el-select v-model="languageString" placeholder="lang" @change="changeLanguage">
+        <el-option v-for="locale in $i18n.availableLocales" :key="`locale-${locale}`" :value="locale" :label = "$t(`language.${locale}`)">{{ $t(`language.${locale}`) }}</el-option>
     </el-select>
     <el-image class = "logo-image" :src = "logoUrl" >
 
@@ -30,7 +30,7 @@
 
 <script>
     import { User,Lock } from '@element-plus/icons-vue'
-    import { storeAccount, readAccount, removeAccount, storeTokenKey, readTokenKey, removeTokenKey, md5HashSync } from '../../utils/utils'
+    import { storeAccount, readAccount, storeToken, readToken, md5HashSync, storeLanguage, readLanguage } from '../../utils/utils'
     import NetApiShareInstance from '../../net/net-api'
     import { loadingViewShow, loadingViewDismiss } from '../../utils/loading-view'
     import { successNotificationShow, errorNotificationShow} from '../../utils/notification-view'
@@ -44,33 +44,12 @@
         },
         data() {
             return {
+                languageString: this.$t(`language.${this.$i18n.locale}`),
                 logoUrl: new URL('../.././assets/logo.png', import.meta.url).href,
                 form: {
                     account: "",
                     password: ""
                 },
-                // rules: {
-                //     account: [
-                //         {
-                //             required: true,
-                //             message: this.$t('login.accountInputTipsText')
-                //         },
-                //         {
-                //             pattern: /^1[3456789]\d{9}$/,
-                //             message: this.$t('login.accountInputIllegalText')
-                //         }
-                //     ],
-                //     password: [
-                //         {
-                //             required: true,
-                //             message: this.$t('login.passwordInputTipsText')
-                //         },
-                //         {
-                //             pattern: /^[^@#!*$^%& ]{8,20}$/,
-                //             message: this.$t('login.passwordInputIllegalText')
-                //         }
-                //     ]
-                // }
             }
         },
         computed: {
@@ -97,10 +76,18 @@
                         }
                     ]
                 }
-            }
+            },
         },
         //方法
         methods: {
+            changeLanguage(value) {
+                if(value === readLanguage()) {
+                    console.log("do not change language")
+                } else {
+                    storeLanguage(value)
+                    this.$i18n.locale = readLanguage()
+                } 
+            },
             login() {
                 this.$refs.form.validate((isok) => {
                     if(isok) {
@@ -109,7 +96,7 @@
                             loadingViewDismiss()
                             if (res.data.ret === 0) {
                                 storeAccount(this.form.account)
-                                storeTokenKey(res.data.token)
+                                storeToken(res.data.token)
                                 this.$router.push(HomeView)
                                 successNotificationShow(this.$t('login.loginSuccessNotificationText'))
                             } else {
@@ -127,12 +114,12 @@
         },
         //生命周期 - 创建完成,访问当前this实例
         created() {
-            
+            console.log(readLanguage())
         },
         //生命周期 - 挂载完成,访问DOM元素
         mounted() {
             loadingViewShow()
-            NetApiShareInstance.checkToken(readAccount(), readTokenKey()).then((res) => {
+            NetApiShareInstance.checkToken(readAccount(), readToken()).then((res) => {
                 loadingViewDismiss()
                 if(res.data.ret === 0) {
                     this.$router.push(HomeView)
@@ -173,7 +160,7 @@ html,body{
     top: 15vh;
     margin: 0 auto;
     min-width: 280px;
-    min-height: 260px;
+    min-height: 280px;
     /* padding: 20px; */
     /* border: 0.2px solid lightgray;
     border-radius: 5px;
@@ -219,6 +206,16 @@ html,body{
 .enter-item :deep(.el-button) {
     font-size: 16px;
     width: 100%;
+}
+
+.account-item :deep(.el-form-item__error) {
+    top: 70%;
+    text-align: left;
+}
+
+.password-item :deep(.el-form-item__error) {
+    top: 70%;
+    text-align: left;
 }
     
 </style>

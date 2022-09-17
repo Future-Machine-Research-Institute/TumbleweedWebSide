@@ -1,5 +1,9 @@
 
 export default {
+    language: {
+        zh: "中文",
+        en: "英文"
+    },
     login: {
         accountInputTipsText: "请输入账号",
         passwordInputTipsText: "请输入密码",
