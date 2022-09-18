@@ -4,8 +4,10 @@ axios.defaults.baseURL = "https://192.168.1.3"
 axios.defaults.timeout = 30000;
 
 const testUrl = "/users/test"
-const checkTokenUrl = "/users/authorize"
+const tokenCheckUrl = "/users/authorize"
 const userLoginUrl = "/users/login"
+
+const packageUploadUrl = "/package/upload"
 
 // const accountKey = "account"
 // const passwordKey = "password"
@@ -35,7 +37,7 @@ class NetApi {
         return new Promise(async (resolve, reject) => {
             try {
                 let data = {account: account, token: token}
-                axios.post(checkTokenUrl, data).then((res) => {
+                axios.post(tokenCheckUrl, data).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)
@@ -51,6 +53,29 @@ class NetApi {
             try {
                 let data = {account: account, password: password}
                 axios.post(userLoginUrl, data).then((res) => {
+                    resolve(res)
+                }).catch((err) => {
+                    reject(err)
+                })
+            } catch (error) {
+                reject(error)
+            }
+        })
+    }
+
+    packageUpload(formData, progressCallback) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const config  = {
+                    headers: {'Content-Type': 'multipart/form-data'},
+                    timeout: 600000,
+                    onUploadProgress: (progressEvent) => {
+                        if(progressEvent.lengthComputable && (progressCallback && typeof progressCallback === "function")) {
+                            progressCallback(progressEvent.loaded / progressEvent.total)
+                        }
+                    }
+                }
+                axios.post(packageUploadUrl, formData, config).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)

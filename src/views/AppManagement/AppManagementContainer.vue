@@ -1,48 +1,43 @@
 <template>
   <div class="main">
 
-    <el-dialog v-model="dialogFormVisible" title="App包上传" width="100%" top="0px">
+    <el-dialog v-model="uploadPackageDialogVisible" title="App包上传" width="100%" top="0px">
       <!-- <Transition name="fade"></Transition> -->
       <div v-if="isShowUploadProgress" class="upload-progress-container">
         <el-progress class="upload-progress" type="circle" :percentage="uploadPercentage" />
       </div>
       <div class="upload-dialog-body">
-
-        <el-form class="upload-dialog-form">
-          <el-form-item label="App文件">
-            <el-input v-model="dialogFormFileName" autocomplete="off" type="file" ref="fileSelectInput" accept=".apk,.ipa" @change="fileSelect" />
+        <el-form class="upload-dialog-form" ref = "uploadPackageForm" :model = "uploadPackageForm" :rules = "uploadPackageRules">
+          <el-form-item label="App文件" prop = "fileName">
+            <el-input v-model="uploadPackageForm.fileName" autocomplete="off" type="file" ref="fileSelectInput" accept=".apk,.ipa" @change="fileSelect" />
           </el-form-item>
-          <el-form-item label="App名称">
-            <el-input v-model="dialogFormAppName" />
+          <el-form-item label="App名称" prop = "appName">
+            <el-input v-model="uploadPackageForm.appName" />
           </el-form-item>
-          <el-form-item label="App版本">
-            <el-input v-model="dialogFormAppVersion" />
+          <el-form-item label="App版本" prop = "appVersion">
+            <el-input v-model="uploadPackageForm.appVersion" />
           </el-form-item>
-          <!-- <el-form-item label="App系统">
-            <el-select v-model="dialogFormAppSystem" placeholder="请选择系统类型">
-              <el-option label="IOS" :value="0" />
-              <el-option label="Android" :value="1" />
-            </el-select>
-          </el-form-item> -->
-          <el-form-item label="App系统">
-            <el-input v-model="dialogFormAppSystem" disabled/>
-          </el-form-item>
-          <el-form-item label="App进度">
-            <el-radio-group v-model="dialogFormProgress">
-              <el-radio label="正式版" />
-              <el-radio label="测试版" />
+          <el-form-item label="App系统" prop = "appSystem">
+            <el-radio-group v-model="uploadPackageForm.appSystem" disabled>
+              <el-radio :label="0">IOS</el-radio>
+              <el-radio :label="1">Android</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="App描述">
-            <el-input v-model="dialogFormAppDescription" maxlength="30" show-word-limit type="textarea"/>
+          <el-form-item label="App进度" prop = "appProgress">
+            <el-radio-group v-model="uploadPackageForm.appProgress">
+              <el-radio-button :label="0">正式版</el-radio-button>
+              <el-radio-button :label="1">测试版</el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="App描述" prop = "appDescription">
+            <el-input v-model="uploadPackageForm.appDescription" maxlength="30" show-word-limit type="textarea"/>
           </el-form-item>
         </el-form>
-
       </div>
       
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button @click="uploadPackageDialogVisible = false">取消</el-button>
           <el-button type="primary" @click="uploadPackage">上传</el-button>
         </span>
       </template>
@@ -78,7 +73,7 @@
     </el-input>
 
 
-    <el-button class="upload-button" @click="dialogFormVisible = true">上传</el-button>
+    <el-button class="upload-button" @click="uploadPackageDialogVisible = true">上传</el-button>
     <el-button class="delete-button" @click="deletePackage">删除</el-button>
 
 
@@ -88,6 +83,11 @@
 <script>
   import { Search } from '@element-plus/icons-vue'
   import { readPkgInfo } from '../../third-party/app-package-parser'
+  import { errorMessageShow } from '../../utils/message-view'
+  import { md5FromFile, getUTCTimeStamp, transformUTCTimeStampToLocalTime, readAccount, readToken } from '../../utils/utils'
+  import NetApiShareInstance from '../../net/net-api'
+import { errorNotificationShow, successNotificationShow } from '../../utils/notification-view'
+  // import { loadingViewShow, loadingViewDismiss} from '../../utils/loading-view'
 
     export default {
         components: {
@@ -97,13 +97,16 @@
             return {
               isShowUploadProgress: false,
               uploadPercentage: 0,
-              dialogFormVisible: false,
-              dialogFormFileName: "",
-              dialogFormAppName: "",
-              dialogFormAppVersion: "",
-              dialogFormAppSystem: null,
-              dialogFormProgress: "",
-              dialogFormAppDescription: "",
+              uploadPackageDialogVisible: false,
+              uploadPackageForm: {
+                fileName: "",
+                appName: "",
+                appVersion: "",
+                appSystem: null,
+                appProgress: null,
+                appDescription: "",
+                appIcon: ""
+              },
               inputSearch: "",
               inputSelect: "",
               tableData:
@@ -143,20 +146,112 @@
                 ]
             }
         },
+        computed: {
+          uploadPackageRules() {
+            return {
+              fileName: [
+                {
+                  required: true,
+                  message: "上传的文件不能为空"
+                },
+              ],
+              appName: [
+                {
+                  required: true,
+                  message: "App名称不能为空"
+                }
+              ],
+              appVersion: [
+                {
+                  required: true,
+                  message: "App版本不能为空"
+                }
+              ],
+              appSystem: [
+                {
+                  required: true,
+                  message: "App系统未选择"
+                }
+              ],
+              appProgress: [
+                {
+                  required: true,
+                  message: "App进度未选择"
+                }
+              ],
+              appDescription: [
+                {
+                  required: true,
+                  message: "App描述不能为空"
+                }
+              ],
+            }
+          },
+        },
         //方法
         methods: {
 
             async fileSelect() {
-              const file = this.$refs.fileSelectInput.input.files[0]
-              const extension = file.name.substr(file.name.lastIndexOf(".") + 1)
-              console.log(extension)
-              let apkInfo = await readPkgInfo(file);
-              console.log(apkInfo);
+              try {
+                //IOS = 0 正式版 = 0
+                const file = this.$refs.fileSelectInput.input.files[0]
+                if(file) {
+                  const extension = file.name.substr(file.name.lastIndexOf(".") + 1)
+                  let apkInfo = await readPkgInfo(file);
+                  this.uploadPackageForm.appName = apkInfo.name
+                  this.uploadPackageForm.appVersion = apkInfo.versionName
+                  this.uploadPackageForm.appSystem = extension === "ipa" ? 0 : 1
+                  this.uploadPackageForm.appIcon = apkInfo.icon
+                }
+              } catch (error) {
+                errorMessageShow(error)
+              }
             },
 
-            uploadPackage() {
-              console.log("uploadPackage")
-              this.isShowUploadProgress = true
+            async uploadPackage() {
+              this.$refs.uploadPackageForm.validate(async (isok) => {
+                if (isok) {
+                  this.isShowUploadProgress = true
+                  try {
+                    const file = this.$refs.fileSelectInput.input.files[0]
+                    const fileMd5 = await md5FromFile(file)
+                    const utcTimeStamp = getUTCTimeStamp()
+                    let formData = new FormData()
+                    formData.append('package', file)
+                    formData.append('account', readAccount())
+                    formData.append('token', readToken())
+                    formData.append('appIcon', this.uploadPackageForm.appIcon)
+                    console.log("this.uploadPackageForm.appIcon: ", this.uploadPackageForm.appIcon)
+                    formData.append('appName', this.uploadPackageForm.appName)
+                    formData.append('version', this.uploadPackageForm.appVersion)
+                    formData.append('uploadTime', utcTimeStamp)
+                    formData.append('system', this.uploadPackageForm.appSystem)
+                    formData.append('progress', this.uploadPackageForm.appProgress)
+                    formData.append('md5', fileMd5)
+                    formData.append('description', this.uploadPackageForm.appDescription)
+                    NetApiShareInstance.packageUpload(formData, (progress) => {
+                      this.uploadPercentage = progress * 100
+                    }).then((res) => {
+                      console.log("上传: ", res)
+                      if(res.data.ret === 0) {
+                        successNotificationShow("App上传成功")
+                      } else {
+                        errorNotificationShow("App上传失败", res.data.message)
+                      }
+                      this.isShowUploadProgress = false
+                      this.uploadPercentage = 0
+                    }).catch((err) => {
+                      this.isShowUploadProgress = false
+                      this.uploadPercentage = 0
+                      errorMessageShow(err)
+                    })
+                  } catch (error) {
+                    this.isShowUploadProgress = false
+                    this.uploadPercentage = 0
+                    errorMessageShow(error)
+                  }
+                }
+              })
             },
 
             updatePackage () {
