@@ -2,6 +2,7 @@
   <div class="main">
 
     <el-dialog v-model="dialogFormVisible" title="App包上传" width="100%" top="0px">
+      <!-- <Transition name="fade"></Transition> -->
       <div v-if="isShowUploadProgress" class="upload-progress-container">
         <el-progress class="upload-progress" type="circle" :percentage="uploadPercentage" />
       </div>
@@ -9,7 +10,7 @@
 
         <el-form class="upload-dialog-form">
           <el-form-item label="App文件">
-            <el-input v-model="dialogFormFileName" autocomplete="off" type="file" id="file" accept=".apk,.ipa" @change="fileSelect" />
+            <el-input v-model="dialogFormFileName" autocomplete="off" type="file" ref="fileSelectInput" accept=".apk,.ipa" @change="fileSelect" />
           </el-form-item>
           <el-form-item label="App名称">
             <el-input v-model="dialogFormAppName" />
@@ -17,17 +18,23 @@
           <el-form-item label="App版本">
             <el-input v-model="dialogFormAppVersion" />
           </el-form-item>
-          <el-form-item label="App系统">
+          <!-- <el-form-item label="App系统">
             <el-select v-model="dialogFormAppSystem" placeholder="请选择系统类型">
               <el-option label="IOS" :value="0" />
               <el-option label="Android" :value="1" />
             </el-select>
+          </el-form-item> -->
+          <el-form-item label="App系统">
+            <el-input v-model="dialogFormAppSystem" disabled/>
           </el-form-item>
           <el-form-item label="App进度">
             <el-radio-group v-model="dialogFormProgress">
               <el-radio label="正式版" />
               <el-radio label="测试版" />
             </el-radio-group>
+          </el-form-item>
+          <el-form-item label="App描述">
+            <el-input v-model="dialogFormAppDescription" maxlength="30" show-word-limit type="textarea"/>
           </el-form-item>
         </el-form>
 
@@ -96,6 +103,7 @@
               dialogFormAppVersion: "",
               dialogFormAppSystem: null,
               dialogFormProgress: "",
+              dialogFormAppDescription: "",
               inputSearch: "",
               inputSelect: "",
               tableData:
@@ -139,7 +147,9 @@
         methods: {
 
             async fileSelect() {
-              const file = document.getElementById('file').files[0]
+              const file = this.$refs.fileSelectInput.input.files[0]
+              const extension = file.name.substr(file.name.lastIndexOf(".") + 1)
+              console.log(extension)
               let apkInfo = await readPkgInfo(file);
               console.log(apkInfo);
             },
@@ -223,7 +233,7 @@
 } */
 .upload-dialog-body {
   width: 100%;
-  height: 30vh;
+  height: 304px;
   /* background-color: black; */
 }
 
@@ -250,5 +260,14 @@
   justify-content: center;
   align-items: center;
 }
+
+/* .fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+} */
+
 
 </style>

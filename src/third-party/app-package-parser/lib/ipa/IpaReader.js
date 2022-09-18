@@ -67,7 +67,7 @@ class IpaReader extends Reader {
     // 解析图标
     let iconName = this.findOutIcon(plistInfo);
     let iconBuffer = await this.getEntry(new RegExp(iconName.toLowerCase()));
-    console.log("iconBuffer: ", iconBuffer)
+    // console.log("iconBuffer: ", iconBuffer)
     if(!iconBuffer) {
       plistInfo.icon = null;
     } else {
@@ -75,21 +75,6 @@ class IpaReader extends Reader {
       console.log("pngBuffer: ", pngBuffer)
       let icon = 'data:image/png;base64,' + uint8arrayToBase64(pngBuffer);
       plistInfo.icon = icon;
-      // try {
-      //   const pngBuffer = revert(iconBuffer);
-      //   console.log("pngBuffer: ", pngBuffer)
-      //   let icon = 'data:image/png;base64,' + pngBuffer.toString('base64');
-      //   plistInfo.icon = icon;
-      // } catch (error) {
-      //   if (isBrowser()) {
-      //     // Normal conversion in other cases
-      //     plistInfo.icon = 'data:image/png;base64,' + arrayBufferToBase64(iconBuffer).toString('base64')
-      //     console.log("plistInfo.icon: ", plistInfo.icon)
-      //   } else {
-      //     plistInfo.icon = null
-      //     console.warn('[Warning] failed to parse icon: ', err)
-      //   }
-      // }
     }
     return plistInfo;
   }
