@@ -9,7 +9,7 @@ import { LoginView, HomeView, PersonalInformationView, AppManagementView, UserMa
 const routes = [
     {
         path:'/',
-        redirect: HomeView
+        redirect: LoginView
     },
     {
         path: LoginView,

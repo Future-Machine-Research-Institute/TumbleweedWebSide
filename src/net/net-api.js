@@ -8,6 +8,7 @@ const tokenCheckUrl = "/users/authorize"
 const userLoginUrl = "/users/login"
 
 const packageUploadUrl = "/package/upload"
+const packageObtainUrl = "/package/obtain"
 
 // const accountKey = "account"
 // const passwordKey = "password"
@@ -76,6 +77,27 @@ class NetApi {
                     }
                 }
                 axios.post(packageUploadUrl, formData, config).then((res) => {
+                    resolve(res)
+                }).catch((err) => {
+                    reject(err)
+                })
+            } catch (error) {
+                reject(error)
+            }
+        })
+    }
+
+    packageObtain(account, token, requiredCount, obtainedCount, queryConditions) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let data = {
+                    account: account, 
+                    token: token,
+                    requiredCount: requiredCount,
+                    obtainedCount: obtainedCount,
+                    queryConditions: queryConditions
+                }
+                axios.post(packageObtainUrl, data).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)

@@ -43,24 +43,29 @@
       </template>
     </el-dialog>
 
-    <el-table class="container" :data="tableData" max-height="calc(100vh - 400px)">
-      <el-table-column type="selection" />
-      <el-table-column fixed prop="appIcon" label="图标" />
-      <el-table-column prop="appId" label="AppID" />
-      <el-table-column prop="appName" label="名称" />
-      <el-table-column prop="version" label="版本" />
-      <el-table-column prop="uploadTime" label="上传时间" />
-      <el-table-column prop="lastModifiedTime" label="最近修改时间" />
-      <el-table-column fixed="right" label="Operations">
+    <el-table class="container" :data="appListTableData" max-height="calc(100vh - 400px)" v-loading="appListTableLoading">
+      <el-table-column type="selection" align = "center"/>
+      <el-table-column fixed label="图标" align = "center">
+        <template #default="scope">
+          <el-image style="width: 60px; height: 60px; margin: 0 auto;" :src = "scope.row.appIcon" :preview-src-list="[scope.row.appIcon]" :preview-teleported="true"/>
+        </template>
+      </el-table-column>
+      <el-table-column prop="appId" label="AppID" align = "center"/>
+      <el-table-column prop="appName" label="名称" align = "center"/>
+      <el-table-column prop="version" label="版本" align = "center"/>
+      <el-table-column prop="uploadTime" label="上传时间" align = "center"/>
+      <el-table-column prop="uploadAccount" label="上传者" align = "center"/>
+      <el-table-column fixed="right" label="Operations" align = "center">
         <el-button link type="primary" size="small" @click="updatePackage">更新</el-button>
       </el-table-column>
     </el-table>
 
-    <el-input class="search-input" type="text" v-model="inputSearch">
+    <el-input class="search-input" type="text" v-model="inputSearchString">
       <template #prepend>
-        <el-select v-model="inputSelect" placeholder="Select" style="width: 100px">
-          <el-option label="App名称" value="1" />
-          <el-option label="AppID" value="2" />
+        <el-select v-model="inputSelectString" placeholder="Select" style="width: 100px">
+          <el-option label="App名称" value="appName" />
+          <el-option label="AppID" value="appId" />
+          <el-option label="上传者" value="uploadAccount" />
         </el-select>
       </template>
       <template #append>
@@ -107,43 +112,10 @@
                 appDescription: "",
                 appIcon: ""
               },
-              inputSearch: "",
-              inputSelect: "",
-              tableData:
-                [
-                  {
-                    appIcon: '2016-05-01',
-                    appId: 'cajsnklmdlasadasdasda',
-                    appName: 'California',
-                    version: '1.0.1',
-                    uploadTime: '2016-05-01',
-                    lastModifiedTime: '2016-05-01',
-                  },
-                  {
-                    appIcon: '2016-05-01',
-                    appId: 'cajsnklmdlasadasdasda',
-                    appName: 'California',
-                    version: '1.0.1',
-                    uploadTime: '2016-05-01',
-                    lastModifiedTime: '2016-05-01',
-                  },
-                  {
-                    appIcon: '2016-05-01',
-                    appId: 'cajsnklmdlasadasdasda',
-                    appName: 'California',
-                    version: '1.0.1',
-                    uploadTime: '2016-05-01',
-                    lastModifiedTime: '2016-05-01',
-                  },
-                  {
-                    appIcon: '2016-05-01',
-                    appId: 'cajsnklmdlasadasdasda',
-                    appName: 'California',
-                    version: '1.0.1',
-                    uploadTime: '2016-05-01',
-                    lastModifiedTime: '2016-05-01',
-                  }
-                ]
+              inputSearchString: "",
+              inputSelectString: "",
+              appListTableLoading: true,
+              appListTableData:[]
             }
         },
         computed: {
@@ -275,7 +247,20 @@
         },
         //生命周期 - 挂载完成,访问DOM元素
         mounted() {
-            
+          this.appListTableLoading = true
+          NetApiShareInstance.packageObtain(readAccount(), readToken(), 5, 0, {}).then((res) => {
+            if(res.data.ret === 0) {
+              console.log("list: ", res.data.items)
+              console.log("finished: ", res.data.finished)
+              this.appListTableData.push.apply(this.appListTableData, res.data.items)
+            } else {
+              errorNotificationShow("获取App列表失败", res.data.message)
+            }
+            this.appListTableLoading = false
+          }).catch((err) => {
+            this.appListTableLoading = false
+            errorMessageShow(error)
+          })
         },
         unmounted() {
           console.log("AppManagerContainer -- delloc")
