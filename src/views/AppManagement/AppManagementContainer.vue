@@ -1,7 +1,7 @@
 <template>
   <div class="main">
 
-    <el-dialog v-model="uploadPackageDialogVisible" title="App包上传" width="100%" top="0px">
+    <el-dialog v-model="uploadPackageDialogVisible" title="App包上传" width="100%" top="0px" :destroy-on-close = "true">
       <!-- <Transition name="fade"></Transition> -->
       <div v-if="isShowUploadProgress" class="upload-progress-container">
         <el-progress class="upload-progress" type="circle" :percentage="uploadPercentage" />
@@ -86,7 +86,7 @@
   import { errorMessageShow } from '../../utils/message-view'
   import { md5FromFile, getUTCTimeStamp, transformUTCTimeStampToLocalTime, readAccount, readToken } from '../../utils/utils'
   import NetApiShareInstance from '../../net/net-api'
-import { errorNotificationShow, successNotificationShow } from '../../utils/notification-view'
+  import { errorNotificationShow, successNotificationShow } from '../../utils/notification-view'
   // import { loadingViewShow, loadingViewDismiss} from '../../utils/loading-view'
 
     export default {
@@ -190,7 +190,6 @@ import { errorNotificationShow, successNotificationShow } from '../../utils/noti
         },
         //方法
         methods: {
-
             async fileSelect() {
               try {
                 //IOS = 0 正式版 = 0
@@ -221,7 +220,6 @@ import { errorNotificationShow, successNotificationShow } from '../../utils/noti
                     formData.append('account', readAccount())
                     formData.append('token', readToken())
                     formData.append('appIcon', this.uploadPackageForm.appIcon)
-                    console.log("this.uploadPackageForm.appIcon: ", this.uploadPackageForm.appIcon)
                     formData.append('appName', this.uploadPackageForm.appName)
                     formData.append('version', this.uploadPackageForm.appVersion)
                     formData.append('uploadTime', utcTimeStamp)
@@ -235,6 +233,14 @@ import { errorNotificationShow, successNotificationShow } from '../../utils/noti
                       console.log("上传: ", res)
                       if(res.data.ret === 0) {
                         successNotificationShow("App上传成功")
+                        this.uploadPackageForm.fileName = ""
+                        this.uploadPackageForm.appName = ""
+                        this.uploadPackageForm.appVersion = ""
+                        this.uploadPackageForm.appSystem = null
+                        this.uploadPackageForm.appProgress = null
+                        this.uploadPackageForm.appDescription = ""
+                        this.uploadPackageForm.appIcon = ""
+                        this.uploadPackageDialogVisible = false
                       } else {
                         errorNotificationShow("App上传失败", res.data.message)
                       }

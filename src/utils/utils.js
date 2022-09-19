@@ -62,7 +62,7 @@ const md5FromFile = async (file) => {
     return new Promise(async (resolve, reject) => {
         try {
             const reader = new FileReader()
-            reader.readAsArrayBuffer(file, 'utf-8')
+            reader.readAsArrayBuffer(file)
             reader.onload = (e) => {
                 return resolve(md5(e.target.result))
             }
@@ -84,13 +84,13 @@ const transformUTCTimeStampToLocalTime = (utcTimeStamp) => {
     const time = new Date()
     const localOffset = time.getTimezoneOffset() * 60000
     const localTimeStamp = utcTimeStamp - localOffset
-    const date = new Date(localTimeStamp);
-    const Y = date.getFullYear() + '-';
-    const M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1):date.getMonth()+1) + '-';
-    const D = (date.getDate()< 10 ? '0'+date.getDate():date.getDate())+ ' ';
-    const h = (date.getHours() < 10 ? '0'+date.getHours():date.getHours())+ ':';
-    const m = (date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()) + ':';
-    const s = date.getSeconds() < 10 ? '0'+date.getSeconds():date.getSeconds();
+    const date = new Date(localTimeStamp)
+    const Y = date.getFullYear() + '-'
+    const M = (date.getMonth() + 1 < 10 ? '0'+ (date.getMonth()+1):date.getMonth()+1) + '-'
+    const D = (date.getDate() < 10 ? '0'+ date.getDate():date.getDate()) + ' '
+    const h = (date.getHours() < 10 ? '0'+ date.getHours():date.getHours()) + ':'
+    const m = (date.getMinutes() < 10 ? '0'+ date.getMinutes():date.getMinutes()) + ':'
+    const s = date.getSeconds() < 10 ? '0'+ date.getSeconds():date.getSeconds()
     return Y + M + D + h + m + s
 }
 
