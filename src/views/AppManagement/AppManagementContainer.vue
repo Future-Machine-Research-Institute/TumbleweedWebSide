@@ -43,7 +43,7 @@
       </template>
     </el-dialog>
 
-    <el-table class="container" :data="appListTableData" max-height="calc(100vh - 400px)" v-loading="appListTableLoading">
+    <el-table class="container" ref="appListTable" v-scroll="appListTableScrollToBottom" :data="appListTableData" max-height="calc(100vh - 400px)" :row-style="{height: '60px'}" v-loading="appListTableLoading">
       <el-table-column type="selection" align = "center"/>
       <el-table-column fixed label="图标" align = "center">
         <template #default="scope">
@@ -58,6 +58,9 @@
       <el-table-column fixed="right" label="Operations" align = "center">
         <el-button link type="primary" size="small" @click="updatePackage">更新</el-button>
       </el-table-column>
+      <!-- <template #append>
+        <div class="scroll-loading" v-loading="appListTableScrollLoading" style="width: 100%; height: 35px; margin: 0 auto;"></div>
+      </template> -->
     </el-table>
 
     <el-input class="search-input" type="text" v-model="inputSearchString">
@@ -69,7 +72,7 @@
         </el-select>
       </template>
       <template #append>
-        <el-button>
+        <el-button @click="searchAppList">
           <el-icon>
             <Search />
           </el-icon>
@@ -92,6 +95,7 @@
   import { md5FromFile, getUTCTimeStamp, transformUTCTimeStampToLocalTime, readAccount, readToken } from '../../utils/utils'
   import NetApiShareInstance from '../../net/net-api'
   import { errorNotificationShow, successNotificationShow } from '../../utils/notification-view'
+  import { parseInt } from 'lodash'
   // import { loadingViewShow, loadingViewDismiss} from '../../utils/loading-view'
 
     export default {
@@ -113,12 +117,44 @@
                 appIcon: ""
               },
               inputSearchString: "",
+              scrollLoadingSearchObject: {},
               inputSelectString: "",
-              appListTableLoading: true,
+              appListTableLoading: false,
+              appListTableScrollLoading: false,
+              isAppListLoadFinished: false,
+              obtainedCount: 0,
               appListTableData:[]
             }
         },
+        directives: {
+          'scroll': {
+            beforeMount(el, binding) {
+              const bodyWrap = el.querySelector('.el-table__body-wrapper')
+              const scrollWrapDom = bodyWrap.querySelector('.el-scrollbar__wrap')
+              let sign = 0
+              let before = 0
+              bodyWrap.addEventListener('scroll', (event) => {
+                console.log("scrollTop: ", scrollWrapDom.scrollTop)
+                //排除左右滚动的情况
+                if(scrollWrapDom.scrollTop !== before) {
+                  const scrollDistance = scrollWrapDom.scrollHeight - scrollWrapDom.scrollTop - scrollWrapDom.clientHeight
+                  if (scrollDistance <= sign) {
+                    binding.value()
+                  }
+                  before = scrollWrapDom.scrollTop
+                }
+              }, true)
+            }
+          }
+        },
         computed: {
+          requiredCount() {
+            const tableHeight = document.body.clientHeight - 400
+            console.log("tableHeight: ", tableHeight)
+            const count = parseInt(tableHeight / 84) + 1
+            console.log("count: ", count)
+            return count
+          },
           uploadPackageRules() {
             return {
               fileName: [
@@ -238,6 +274,66 @@
 
             deletePackage() {
               
+            },
+
+            appListTableScrollToBottom() {
+              console.log("到底部了。。。。。")
+              if(this.appListTableScrollLoading === false && this.appListTableLoading === false) {
+                this.appListTableScrollLoading = true
+
+                NetApiShareInstance.packageObtain(readAccount(), readToken(), this.requiredCount, this.obtainedCount, this.scrollLoadingSearchObject).then((res) => {
+                  if (res.data.ret === 0) {
+                    console.log("list: ", res.data.items)
+                    console.log("finished: ", res.data.finished)
+                    this.obtainedCount = this.obtainedCount + res.data.items.length
+                    this.appListTableData.push.apply(this.appListTableData, res.data.items)
+                    this.isAppListLoadFinished = res.data.finished
+                  } else {
+                    errorNotificationShow("获取App列表失败", res.data.message)
+                  }
+                  this.appListTableScrollLoading = false
+                }).catch((err) => {
+                  this.appListTableScrollLoading = false
+                  errorMessageShow(err)
+                })
+              } else {
+                console.log("正在等待加载.....")
+              }
+            },
+
+            appListTableAllReload(requiredCount, obtainedCount, searchObject) {
+              if(this.appListTableScrollLoading === true || this.appListTableLoading === true) {
+                console.log("正在等待加载.....")
+              } else {
+                this.appListTableLoading = true
+                NetApiShareInstance.packageObtain(readAccount(), readToken(), requiredCount, obtainedCount, searchObject).then((res) => {
+                  if (res.data.ret === 0) {
+                    console.log("list: ", res.data.items)
+                    console.log("finished: ", res.data.finished)
+                    this.obtainedCount = this.obtainedCount + res.data.items.length
+                    this.appListTableData.push.apply(this.appListTableData, res.data.items)
+                    this.isAppListLoadFinished = res.data.finished
+                  } else {
+                    errorNotificationShow("获取App列表失败", res.data.message)
+                  }
+                  this.appListTableLoading = false
+                }).catch((err) => {
+                  this.appListTableLoading = false
+                  errorMessageShow(err)
+                })
+              }
+            },
+
+            searchAppList() {
+              console.log("inputSelectString: ", this.inputSelectString)
+              console.log("inputSearchString: ", this.inputSearchString)
+              // this.scrollLoadingSearchObject
+              if(this.inputSearchString !== "" && this.inputSelectString !== "") {
+                console.log("搜索信息完整, 搜索对象改为: ", {[this.inputSelectString]: this.inputSearchString})
+              } else {
+                errorMessageShow("搜索信息不完整")
+              }
+
             }
 
         },
@@ -247,20 +343,7 @@
         },
         //生命周期 - 挂载完成,访问DOM元素
         mounted() {
-          this.appListTableLoading = true
-          NetApiShareInstance.packageObtain(readAccount(), readToken(), 5, 0, {}).then((res) => {
-            if(res.data.ret === 0) {
-              console.log("list: ", res.data.items)
-              console.log("finished: ", res.data.finished)
-              this.appListTableData.push.apply(this.appListTableData, res.data.items)
-            } else {
-              errorNotificationShow("获取App列表失败", res.data.message)
-            }
-            this.appListTableLoading = false
-          }).catch((err) => {
-            this.appListTableLoading = false
-            errorMessageShow(error)
-          })
+          this.appListTableAllReload(this.requiredCount, this.obtainedCount, {})
         },
         unmounted() {
           console.log("AppManagerContainer -- delloc")
@@ -346,6 +429,11 @@
   justify-content: center;
   align-items: center;
 }
+
+/* .scroll-loading :deep(.el-loading-spinner) {
+  width: 35px;
+  height: 35px;
+} */
 
 /* .fade-enter-active, .fade-leave-active {
   transition: opacity 0.5s ease;
