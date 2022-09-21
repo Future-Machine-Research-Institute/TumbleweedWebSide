@@ -69,7 +69,7 @@ class NetApi {
             try {
                 const config  = {
                     headers: {'Content-Type': 'multipart/form-data'},
-                    timeout: 600000,
+                    timeout: 3600000,
                     onUploadProgress: (progressEvent) => {
                         if(progressEvent.lengthComputable && (progressCallback && typeof progressCallback === "function")) {
                             progressCallback(progressEvent.loaded / progressEvent.total)

@@ -1,7 +1,7 @@
 <template>
   <div class="main">
 
-    <el-dialog v-model="uploadPackageDialogVisible" title="App包上传" width="100%" top="0px" :destroy-on-close = "true">
+    <el-dialog v-model="uploadPackageDialogVisible" title="App包上传" width="100%" top="0px">
       <!-- <Transition name="fade"></Transition> -->
       <div v-if="isShowUploadProgress" class="upload-progress-container">
         <el-progress class="upload-progress" type="circle" :percentage="uploadPercentage" />
@@ -43,7 +43,7 @@
       </template>
     </el-dialog>
 
-    <el-table class="container" ref="appListTable" v-scroll="appListTableScrollToBottom" :data="appListTableData" max-height="calc(100vh - 400px)" :row-style="{height: '60px'}" v-loading="appListTableLoading">
+    <el-table class="container" id="appListTable" v-scroll="appListTableScrollToBottom" :data="appListTableData" max-height="calc(100vh - 400px)" :row-style="{height: '60px'}" v-loading="appListTableLoading">
       <el-table-column type="selection" align = "center"/>
       <el-table-column fixed label="图标" align = "center">
         <template #default="scope">
@@ -53,7 +53,11 @@
       <el-table-column prop="appId" label="AppID" align = "center"/>
       <el-table-column prop="appName" label="名称" align = "center"/>
       <el-table-column prop="version" label="版本" align = "center"/>
-      <el-table-column prop="uploadTime" label="上传时间" align = "center"/>
+      <el-table-column label="上传时间" align = "center">
+        <template #default="scope">
+          <span>{{ getLocalTime(scope.row.uploadTime) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="uploadAccount" label="上传者" align = "center"/>
       <el-table-column fixed="right" label="Operations" align = "center">
         <el-button link type="primary" size="small" @click="updatePackage">更新</el-button>
@@ -135,6 +139,8 @@
               let before = 0
               bodyWrap.addEventListener('scroll', (event) => {
                 console.log("scrollTop: ", scrollWrapDom.scrollTop)
+                // console.log("scrollHeight: ", scrollWrapDom.scrollHeight)
+                // console.log("clientHeight: ", scrollWrapDom.clientHeight)
                 //排除左右滚动的情况
                 if(scrollWrapDom.scrollTop !== before) {
                   const scrollDistance = scrollWrapDom.scrollHeight - scrollWrapDom.scrollTop - scrollWrapDom.clientHeight
@@ -310,9 +316,12 @@
                   if (res.data.ret === 0) {
                     console.log("list: ", res.data.items)
                     console.log("finished: ", res.data.finished)
-                    this.obtainedCount = this.obtainedCount + res.data.items.length
-                    this.appListTableData.push.apply(this.appListTableData, res.data.items)
+                    //刷新app表时将滚动条置于初始位置
+                    document.getElementById('appListTable').querySelector('.el-scrollbar__wrap').scrollTop = 0
+                    this.obtainedCount = res.data.items.length
+                    this.appListTableData = res.data.items
                     this.isAppListLoadFinished = res.data.finished
+                    this.scrollLoadingSearchObject = searchObject
                   } else {
                     errorNotificationShow("获取App列表失败", res.data.message)
                   }
@@ -327,13 +336,19 @@
             searchAppList() {
               console.log("inputSelectString: ", this.inputSelectString)
               console.log("inputSearchString: ", this.inputSearchString)
+              console.log("搜索信息完整, 搜索对象改为: ", {[this.inputSelectString]: this.inputSearchString})
+              const searchObject = {[this.inputSelectString]: this.inputSearchString}
               // this.scrollLoadingSearchObject
               if(this.inputSearchString !== "" && this.inputSelectString !== "") {
-                console.log("搜索信息完整, 搜索对象改为: ", {[this.inputSelectString]: this.inputSearchString})
+                this.appListTableAllReload(this.requiredCount, 0, searchObject)
               } else {
                 errorMessageShow("搜索信息不完整")
               }
 
+            },
+
+            getLocalTime(timeStamp) {
+              return transformUTCTimeStampToLocalTime(timeStamp)
             }
 
         },
@@ -343,7 +358,27 @@
         },
         //生命周期 - 挂载完成,访问DOM元素
         mounted() {
-          this.appListTableAllReload(this.requiredCount, this.obtainedCount, {})
+          this.appListTableAllReload(this.requiredCount, 0, {})
+          // if (this.appListTableScrollLoading === true || this.appListTableLoading === true) {
+          //   console.log("正在等待加载.....")
+          // } else {
+          //   this.appListTableLoading = true
+          //   NetApiShareInstance.packageObtain(readAccount(), readToken(), this.requiredCount, 0, {}).then((res) => {
+          //     if (res.data.ret === 0) {
+          //       console.log("list: ", res.data.items)
+          //       console.log("finished: ", res.data.finished)
+          //       this.obtainedCount = this.obtainedCount + res.data.items.length
+          //       this.appListTableData.push.apply(this.appListTableData, res.data.items)
+          //       this.isAppListLoadFinished = res.data.finished
+          //     } else {
+          //       errorNotificationShow("获取App列表失败", res.data.message)
+          //     }
+          //     this.appListTableLoading = false
+          //   }).catch((err) => {
+          //     this.appListTableLoading = false
+          //     errorMessageShow(err)
+          //   })
+          // }
         },
         unmounted() {
           console.log("AppManagerContainer -- delloc")
