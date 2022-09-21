@@ -43,7 +43,7 @@
       </template>
     </el-dialog>
 
-    <el-table class="container" id="appListTable" v-scroll="appListTableScrollToBottom" :data="appListTableData" max-height="calc(100vh - 400px)" :row-style="{height: '60px'}" v-loading="appListTableLoading">
+    <el-table class="container" @selection-change="appListTableSelectionChange" id="appListTable" ref="appListTable" v-scroll="appListTableScrollToBottom" :data="appListTableData" max-height="calc(100vh - 400px)" :row-style="{height: '60px'}" v-loading="appListTableLoading">
       <el-table-column type="selection" align = "center"/>
       <el-table-column fixed label="图标" align = "center">
         <template #default="scope">
@@ -100,6 +100,7 @@
   import NetApiShareInstance from '../../net/net-api'
   import { errorNotificationShow, successNotificationShow } from '../../utils/notification-view'
   import { parseInt } from 'lodash'
+  import { ref } from 'vue'
   // import { loadingViewShow, loadingViewDismiss} from '../../utils/loading-view'
 
     export default {
@@ -127,7 +128,8 @@
               appListTableScrollLoading: false,
               isAppListLoadFinished: false,
               obtainedCount: 0,
-              appListTableData:[]
+              appListTableData:[],
+              appListTableSelectionData: []
             }
         },
         directives: {
@@ -255,6 +257,7 @@
                         this.uploadPackageForm.appDescription = ""
                         this.uploadPackageForm.appIcon = ""
                         this.uploadPackageDialogVisible = false
+                        this.appListTableAllReload(this.requiredCount, 0, {})
                       } else {
                         errorNotificationShow("App上传失败", res.data.message)
                       }
@@ -279,7 +282,39 @@
             },
 
             deletePackage() {
-              
+              if(this.appListTableScrollLoading === true || this.appListTableLoading === true) {
+                console.log("正在等待加载.....")
+              } else {
+                let deleteAppIdArray = []
+                for (const item of this.appListTableSelectionData) {
+                  console.log("item: ", item.appId)
+                  deleteAppIdArray.push({ "appId": item.appId })
+                }
+                console.log("deleteAppIdArray: ", deleteAppIdArray)
+                if(deleteAppIdArray.length === 0) {
+                  errorMessageShow("未选择删除项")
+                } else {
+                  this.appListTableLoading = true
+                  NetApiShareInstance.packageDelete(readAccount(), readToken(), deleteAppIdArray).then((res) => {
+                    this.appListTableLoading = false
+                    if (res.data.ret === 0) {
+                      // console.log("删除成功, this.appListTableSelectionData: ", this.appListTableSelectionData)
+                      // this.$refs.appListTable.clearSelection()
+                      this.appListTableAllReload(this.requiredCount, 0, {})
+                    } else {
+                      errorNotificationShow("获取App列表失败", res.data.message)
+                    }
+                  }).catch((err) => {
+                    this.appListTableLoading = false
+                    errorMessageShow(err)
+                  })
+                }
+                
+              }
+            },
+
+            appListTableSelectionChange(val) {
+              this.appListTableSelectionData = val
             },
 
             appListTableScrollToBottom() {
@@ -322,6 +357,8 @@
                     this.appListTableData = res.data.items
                     this.isAppListLoadFinished = res.data.finished
                     this.scrollLoadingSearchObject = searchObject
+                    this.$refs.appListTable.clearSelection()
+                    console.log("删除成功, this.appListTableSelectionData: ", this.appListTableSelectionData)
                   } else {
                     errorNotificationShow("获取App列表失败", res.data.message)
                   }

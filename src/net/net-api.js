@@ -9,6 +9,7 @@ const userLoginUrl = "/users/login"
 
 const packageUploadUrl = "/package/upload"
 const packageObtainUrl = "/package/obtain"
+const packageDeleteUrl = "/package/delete"
 
 // const accountKey = "account"
 // const passwordKey = "password"
@@ -98,6 +99,25 @@ class NetApi {
                     queryConditions: queryConditions
                 }
                 axios.post(packageObtainUrl, data).then((res) => {
+                    resolve(res)
+                }).catch((err) => {
+                    reject(err)
+                })
+            } catch (error) {
+                reject(error)
+            }
+        })
+    }
+
+    packageDelete(account, token, appIdArray) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let data = {
+                    account: account, 
+                    token: token,
+                    appIdArray: appIdArray
+                }
+                axios.post(packageDeleteUrl, data).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)
