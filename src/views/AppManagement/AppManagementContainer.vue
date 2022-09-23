@@ -50,7 +50,7 @@
       <div class="update-dialog-body">
         <el-form class="update-dialog-form" ref = "updatePackageForm" :model = "updatePackageForm" :rules = "updatePackageRules">
           <el-form-item label="AppId" prop = "appId">
-            <el-input v-model="updatePackageForm.appId" />
+            <el-input v-model="updatePackageForm.appId" disabled/>
           </el-form-item>
           <el-form-item label="App文件" prop = "fileName">
             <el-input v-model="updatePackageForm.fileName" autocomplete="off" type="file" ref="updateFileSelectInput" accept=".apk,.ipa" @change="updateFileSelect" />
@@ -146,7 +146,7 @@
   import NetApiShareInstance from '../../net/net-api'
   import { errorNotificationShow, successNotificationShow } from '../../utils/notification-view'
   import { parseInt } from 'lodash'
-import { onKeyDown } from '@vueuse/core'
+
   // import { loadingViewShow, loadingViewDismiss} from '../../utils/loading-view'
 
     export default {
@@ -205,11 +205,13 @@ import { onKeyDown } from '@vueuse/core'
                 // console.log("clientHeight: ", scrollWrapDom.clientHeight)
                 //排除左右滚动的情况
                 if(scrollWrapDom.scrollTop !== before) {
-                  const scrollDistance = scrollWrapDom.scrollHeight - scrollWrapDom.scrollTop - scrollWrapDom.clientHeight
+                  if(scrollWrapDom.scrollTop !== 0) {
+                    const scrollDistance = scrollWrapDom.scrollHeight - scrollWrapDom.scrollTop - scrollWrapDom.clientHeight
                   if (scrollDistance <= sign) {
                     binding.value()
                   }
                   before = scrollWrapDom.scrollTop
+                  }
                 }
               }, true)
             }
@@ -424,9 +426,55 @@ import { onKeyDown } from '@vueuse/core'
               // console.log("data: ", data)
               this.$refs.updatePackageForm.validate(async (isok) => {
                 if(isok) {
-                  
-                } else {
-
+                  this.isShowUpdateProgress = true
+                  try {
+                    const file = this.$refs.updateFileSelectInput.input.files[0]
+                    const fileMd5 = await md5FromFile(file)
+                    const utcTimeStamp = getUTCTimeStamp()
+                    let formData = new FormData()
+                    formData.append('package', file)
+                    formData.append('account', readAccount())
+                    formData.append('token', readToken())
+                    formData.append('appId', this.updatePackageForm.appId)
+                    formData.append('appIcon', this.updatePackageForm.appIcon)
+                    formData.append('appName', this.updatePackageForm.appName)
+                    formData.append('version', this.updatePackageForm.appVersion)
+                    formData.append('lastModifiedTime', utcTimeStamp)
+                    formData.append('system', this.updatePackageForm.appSystem)
+                    formData.append('progress', this.updatePackageForm.appProgress)
+                    formData.append('md5', fileMd5)
+                    formData.append('description', this.updatePackageForm.appDescription)
+                    NetApiShareInstance.packageUpdate(formData, (progress) => {
+                      this.updatePercentage = progress * 100
+                    }).then((res) => {
+                      console.log("更新: ", res)
+                      if(res.data.ret === 0) {
+                        successNotificationShow("App更新成功")
+                        this.updatePackageForm.appId = ""
+                        this.updatePackageForm.fileName = ""
+                        this.updatePackageForm.appName = ""
+                        this.updatePackageForm.appVersion = ""
+                        this.updatePackageForm.appSystem = null
+                        this.updatePackageForm.appProgress = null
+                        this.updatePackageForm.appDescription = ""
+                        this.updatePackageForm.appIcon = ""
+                        this.updatePackageDialogVisible = false
+                        this.appListTableAllReload(this.requiredCount, 0, {})
+                      } else {
+                        errorNotificationShow("App更新失败", res.data.message)
+                      }
+                      this.isShowUpdateProgress = false
+                      this.updatePercentage = 0
+                    }).catch((err) => {
+                      this.isShowUpdateProgress = false
+                      this.updatePercentage = 0
+                      errorMessageShow(err)
+                    })
+                  } catch (error) {
+                    this.isShowUpdateProgress = false
+                    this.updatePercentage = 0
+                    errorMessageShow(error)
+                  }
                 }
               })
             },

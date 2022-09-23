@@ -10,6 +10,7 @@ const userLoginUrl = "/users/login"
 const packageUploadUrl = "/package/upload"
 const packageObtainUrl = "/package/obtain"
 const packageDeleteUrl = "/package/delete"
+const packageUpdateUrl = "/package/update"
 
 // const accountKey = "account"
 // const passwordKey = "password"
@@ -118,6 +119,29 @@ class NetApi {
                     appIdArray: appIdArray
                 }
                 axios.post(packageDeleteUrl, data).then((res) => {
+                    resolve(res)
+                }).catch((err) => {
+                    reject(err)
+                })
+            } catch (error) {
+                reject(error)
+            }
+        })
+    }
+
+    packageUpdate(formData, progressCallback) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const config  = {
+                    headers: {'Content-Type': 'multipart/form-data'},
+                    timeout: 3600000,
+                    onUploadProgress: (progressEvent) => {
+                        if(progressEvent.lengthComputable && (progressCallback && typeof progressCallback === "function")) {
+                            progressCallback(progressEvent.loaded / progressEvent.total)
+                        }
+                    }
+                }
+                axios.post(packageUpdateUrl, formData, config).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)
