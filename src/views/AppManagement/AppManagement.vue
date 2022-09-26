@@ -37,7 +37,7 @@
         },
         unmounted() {
           console.log("AppManager -- delloc")
-        },
+        }
     }
 </script>
 
