@@ -1,5 +1,5 @@
 <template>
-    <el-page-header class = "head" title="返回" content="App管理" @back="goBack" >
+    <el-page-header class = "head" :title="$t('appManagement.backButtonText')" :content="$t('appManagement.titleText')" @back="goBack" >
         <template #icon>
             <el-icon><arrow-left /></el-icon>
         </template>

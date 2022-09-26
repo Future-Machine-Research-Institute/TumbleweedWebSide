@@ -1,35 +1,35 @@
 <template>
   <div class="main">
 
-    <el-dialog v-model="uploadPackageDialogVisible" title="App包上传" width="100%" top="0px">
+    <el-dialog v-model="uploadPackageDialogVisible" :title="$t('appManagement.uploadPackageDialogTitleText')" width="100%" top="0px">
       <!-- <Transition name="fade"></Transition> -->
       <div v-if="isShowUploadProgress" class="upload-progress-container">
         <el-progress class="upload-progress" type="circle" :percentage="uploadPercentage" />
       </div>
       <div class="upload-dialog-body">
         <el-form class="upload-dialog-form" ref = "uploadPackageForm" :model = "uploadPackageForm" :rules = "uploadPackageRules">
-          <el-form-item label="App文件" prop = "fileName">
+          <el-form-item :label="$t('appManagement.uploadPackageDialogFormFileNameItemText')" prop = "fileName">
             <el-input v-model="uploadPackageForm.fileName" autocomplete="off" type="file" ref="uploadFileSelectInput" accept=".apk,.ipa" @change="uploadFileSelect" />
           </el-form-item>
-          <el-form-item label="App名称" prop = "appName">
+          <el-form-item :label="$t('appManagement.uploadPackageDialogFormAppNameItemText')" prop = "appName">
             <el-input v-model="uploadPackageForm.appName" />
           </el-form-item>
-          <el-form-item label="App版本" prop = "appVersion">
+          <el-form-item :label="$t('appManagement.uploadPackageDialogFormAppVersionItemText')" prop = "appVersion">
             <el-input v-model="uploadPackageForm.appVersion" />
           </el-form-item>
-          <el-form-item label="App系统" prop = "appSystem">
+          <el-form-item :label="$t('appManagement.uploadPackageDialogFormAppSystemItemText')" prop = "appSystem">
             <el-radio-group v-model="uploadPackageForm.appSystem" disabled>
               <el-radio :label="0">IOS</el-radio>
               <el-radio :label="1">Android</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="App进度" prop = "appProgress">
+          <el-form-item :label="$t('appManagement.uploadPackageDialogFormAppProgressItemText')" prop = "appProgress">
             <el-radio-group v-model="uploadPackageForm.appProgress">
-              <el-radio-button :label="0">正式版</el-radio-button>
-              <el-radio-button :label="1">测试版</el-radio-button>
+              <el-radio-button :label="0">{{$t('appManagement.uploadPackageDialogFormAppProgressItemRadioButton0Text')}}</el-radio-button>
+              <el-radio-button :label="1">{{$t('appManagement.uploadPackageDialogFormAppProgressItemRadioButton1Text')}}</el-radio-button>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="App描述" prop = "appDescription">
+          <el-form-item :label="$t('appManagement.uploadPackageDialogFormAppDescriptionItemText')" prop = "appDescription">
             <el-input v-model="uploadPackageForm.appDescription" maxlength="30" show-word-limit type="textarea"/>
           </el-form-item>
         </el-form>
@@ -37,43 +37,43 @@
       
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="uploadPackageDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="uploadPackage">上传</el-button>
+          <el-button @click="uploadPackageDialogVisible = false">{{$t('appManagement.uploadPackageDialogCancelButtonText')}}</el-button>
+          <el-button type="primary" @click="uploadPackage">{{$t('appManagement.uploadPackageDialogUploadButtonText')}}</el-button>
         </span>
       </template>
     </el-dialog>
 
-    <el-dialog v-model="updatePackageDialogVisible" title="App包更新" width="100%" top="0px">
+    <el-dialog v-model="updatePackageDialogVisible" :title="$t('appManagement.updatePackageDialogTitleText')" width="100%" top="0px">
       <div v-if="isShowUpdateProgress" class="update-progress-container">
         <el-progress class="update-progress" type="circle" :percentage="updatePercentage" />
       </div>
       <div class="update-dialog-body">
         <el-form class="update-dialog-form" ref = "updatePackageForm" :model = "updatePackageForm" :rules = "updatePackageRules">
-          <el-form-item label="AppId" prop = "appId">
+          <el-form-item :label="$t('appManagement.updatePackageDialogFormAppIdItemText')" prop = "appId">
             <el-input v-model="updatePackageForm.appId" disabled/>
           </el-form-item>
-          <el-form-item label="App文件" prop = "fileName">
+          <el-form-item :label="$t('appManagement.updatePackageDialogFormFileNameItemText')" prop = "fileName">
             <el-input v-model="updatePackageForm.fileName" autocomplete="off" type="file" ref="updateFileSelectInput" accept=".apk,.ipa" @change="updateFileSelect" />
           </el-form-item>
-          <el-form-item label="App名称" prop = "appName">
+          <el-form-item :label="$t('appManagement.updatePackageDialogFormAppNameItemText')" prop = "appName">
             <el-input v-model="updatePackageForm.appName" />
           </el-form-item>
-          <el-form-item label="App版本" prop = "appVersion">
+          <el-form-item :label="$t('appManagement.updatePackageDialogFormAppVersionItemText')" prop = "appVersion">
             <el-input v-model="updatePackageForm.appVersion" />
           </el-form-item>
-          <el-form-item label="App系统" prop = "appSystem">
+          <el-form-item :label="$t('appManagement.updatePackageDialogFormAppSystemItemText')" prop = "appSystem">
             <el-radio-group v-model="updatePackageForm.appSystem" disabled>
               <el-radio :label="0">IOS</el-radio>
               <el-radio :label="1">Android</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="App进度" prop = "appProgress">
+          <el-form-item :label="$t('appManagement.updatePackageDialogFormAppProgressItemText')" prop = "appProgress">
             <el-radio-group v-model="updatePackageForm.appProgress">
-              <el-radio-button :label="0">正式版</el-radio-button>
-              <el-radio-button :label="1">测试版</el-radio-button>
+              <el-radio-button :label="0">{{$t('appManagement.updatePackageDialogFormAppProgressItemRadioButton0Text')}}</el-radio-button>
+              <el-radio-button :label="1">{{$t('appManagement.updatePackageDialogFormAppProgressItemRadioButton1Text')}}</el-radio-button>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="App描述" prop = "appDescription">
+          <el-form-item :label="$t('appManagement.updatePackageDialogFormAppDescriptionItemText')" prop = "appDescription">
             <el-input v-model="updatePackageForm.appDescription" maxlength="30" show-word-limit type="textarea"/>
           </el-form-item>
         </el-form>
@@ -81,31 +81,31 @@
       
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="updatePackageDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="updatePackage">更新</el-button>
+          <el-button @click="updatePackageDialogVisible = false">{{$t('appManagement.updatePackageDialogCancelButtonText')}}</el-button>
+          <el-button type="primary" @click="updatePackage">{{$t('appManagement.updatePackageDialogUpdateButtonText')}}</el-button>
         </span>
       </template>
     </el-dialog>
 
     <el-table class="container" @selection-change="appListTableSelectionChange" id="appListTable" ref="appListTable" v-scroll="appListTableScrollToBottom" :data="appListTableData" max-height="calc(100vh - 400px)" :row-style="{height: '60px'}" v-loading="appListTableLoading">
       <el-table-column type="selection" align = "center"/>
-      <el-table-column fixed label="图标" align = "center">
+      <el-table-column fixed :label="$t('appManagement.appListTableAppIconColumnText')" align = "center">
         <template #default="scope">
           <el-image style="width: 60px; height: 60px; margin: 0 auto;" :src = "scope.row.appIcon" :preview-src-list="[scope.row.appIcon]" :preview-teleported="true"/>
         </template>
       </el-table-column>
-      <el-table-column prop="appId" label="AppID" align = "center"/>
-      <el-table-column prop="appName" label="名称" align = "center"/>
-      <el-table-column prop="version" label="版本" align = "center"/>
-      <el-table-column label="上传时间" align = "center">
+      <el-table-column prop="appId" :label="$t('appManagement.appListTableAppIDColumnText')" align = "center"/>
+      <el-table-column prop="appName" :label="$t('appManagement.appListTableAppNameColumnText')" align = "center"/>
+      <el-table-column prop="version" :label="$t('appManagement.appListTableAppVersionColumnText')" align = "center"/>
+      <el-table-column :label="$t('appManagement.appListTableUploadTimeColumnText')" align = "center">
         <template #default="scope">
           <span>{{ getLocalTime(scope.row.uploadTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="uploadAccount" label="上传者" align = "center"/>
-      <el-table-column fixed="right" label="Operations" align = "center">
+      <el-table-column prop="uploadAccount" :label="$t('appManagement.appListTableUploadAccountColumnText')" align = "center"/>
+      <el-table-column fixed="right" :label="$t('appManagement.appListTableOperationsColumnText')" align = "center">
         <template #default="scope">
-          <el-button link type="primary" size="small" @click="updatePackageDialog(scope.row)">更新</el-button>
+          <el-button link type="primary" size="small" @click="updatePackageDialog(scope.row)">{{$t('appManagement.appListTableOperationsColumnUpdateButtonText')}}</el-button>
         </template>
       </el-table-column>
       <!-- <template #append>
@@ -115,10 +115,10 @@
 
     <el-input class="search-input" type="text" v-model="inputSearchString">
       <template #prepend>
-        <el-select v-model="inputSelectString" placeholder="Select" style="width: 100px">
-          <el-option label="App名称" value="appName" />
-          <el-option label="AppID" value="appId" />
-          <el-option label="上传者" value="uploadAccount" />
+        <el-select v-model="inputSelectString" :placeholder="$t('appManagement.searchInputSelectTipsText')" style="width: 100px">
+          <el-option :label="$t('appManagement.searchInputSelectOption0Text')" value="appName" />
+          <el-option :label="$t('appManagement.searchInputSelectOption1Text')" value="appId" />
+          <el-option :label="$t('appManagement.searchInputSelectOption2Text')" value="uploadAccount" />
         </el-select>
       </template>
       <template #append>
@@ -131,8 +131,8 @@
     </el-input>
 
 
-    <el-button class="upload-button" @click="uploadPackageDialogVisible = true">上传</el-button>
-    <el-button class="delete-button" @click="deletePackage">删除</el-button>
+    <el-button class="upload-button" @click="uploadPackageDialogVisible = true">{{$t('appManagement.uploadPackageButtonText')}}</el-button>
+    <el-button class="delete-button" @click="deletePackage">{{$t('appManagement.deletePackageButtonText')}}</el-button>
 
 
   </div>
@@ -230,37 +230,37 @@
               fileName: [
                 {
                   required: true,
-                  message: "上传的文件不能为空"
+                  message: this.$t('appManagement.uploadPackageRulesFileNameMessageText')
                 },
               ],
               appName: [
                 {
                   required: true,
-                  message: "App名称不能为空"
+                  message: this.$t('appManagement.uploadPackageRulesAppNameMessageText')
                 }
               ],
               appVersion: [
                 {
                   required: true,
-                  message: "App版本不能为空"
+                  message: this.$t('appManagement.uploadPackageRulesAppVersionMessageText')
                 }
               ],
               appSystem: [
                 {
                   required: true,
-                  message: "App系统未选择"
+                  message: this.$t('appManagement.uploadPackageRulesAppSystemMessageText')
                 }
               ],
               appProgress: [
                 {
                   required: true,
-                  message: "App进度未选择"
+                  message: this.$t('appManagement.uploadPackageRulesAppProgressMessageText')
                 }
               ],
               appDescription: [
                 {
                   required: true,
-                  message: "App描述不能为空"
+                  message: this.$t('appManagement.uploadPackageRulesAppDescriptionMessageText')
                 }
               ],
             }
@@ -270,43 +270,43 @@
               appId: [
                 {
                   required: true,
-                  message: "AppId不能为空"
+                  message: this.$t('appManagement.updatePackageRulesAppIdMessageText')
                 },
               ],
               fileName: [
                 {
                   required: true,
-                  message: "上传的文件不能为空"
+                  message: this.$t('appManagement.updatePackageRulesFileNameMessageText')
                 },
               ],
               appName: [
                 {
                   required: true,
-                  message: "App名称不能为空"
+                  message: this.$t('appManagement.updatePackageRulesAppNameMessageText')
                 }
               ],
               appVersion: [
                 {
                   required: true,
-                  message: "App版本不能为空"
+                  message: this.$t('appManagement.updatePackageRulesAppVersionMessageText')
                 }
               ],
               appSystem: [
                 {
                   required: true,
-                  message: "App系统未选择"
+                  message: this.$t('appManagement.updatePackageRulesAppSystemMessageText')
                 }
               ],
               appProgress: [
                 {
                   required: true,
-                  message: "App进度未选择"
+                  message: this.$t('appManagement.updatePackageRulesAppProgressMessageText')
                 }
               ],
               appDescription: [
                 {
                   required: true,
-                  message: "App描述不能为空"
+                  message: this.$t('appManagement.updatePackageRulesAppDescriptionMessageText')
                 }
               ],
             }
@@ -345,7 +345,7 @@
                     this.updatePackageForm.appIcon = apkInfo.icon
                   } else {
                     this.updatePackageForm.fileName = ""
-                    errorMessageShow("更新包的系统类型必须一致")
+                    errorMessageShow(this.$t('appManagement.updateFileSelectErrorMessageText'))
                   }
                 }
               } catch (error) {
@@ -378,7 +378,7 @@
                     }).then((res) => {
                       console.log("上传: ", res)
                       if(res.data.ret === 0) {
-                        successNotificationShow("App上传成功")
+                        successNotificationShow(this.$t('appManagement.uploadPackageSuccessNotificationText'))
                         this.uploadPackageForm.fileName = ""
                         this.uploadPackageForm.appName = ""
                         this.uploadPackageForm.appVersion = ""
@@ -389,7 +389,7 @@
                         this.uploadPackageDialogVisible = false
                         this.appListTableAllReload(this.requiredCount, 0, {})
                       } else {
-                        errorNotificationShow("App上传失败", res.data.message)
+                        errorNotificationShow(this.$t('appManagement.uploadPackageErrorNotificationText'), res.data.message)
                       }
                       this.isShowUploadProgress = false
                       this.uploadPercentage = 0
@@ -449,7 +449,7 @@
                     }).then((res) => {
                       console.log("更新: ", res)
                       if(res.data.ret === 0) {
-                        successNotificationShow("App更新成功")
+                        successNotificationShow(this.$t('appManagement.updatePackageSuccessNotificationText'))
                         this.updatePackageForm.appId = ""
                         this.updatePackageForm.fileName = ""
                         this.updatePackageForm.appName = ""
@@ -461,7 +461,7 @@
                         this.updatePackageDialogVisible = false
                         this.appListTableAllReload(this.requiredCount, 0, {})
                       } else {
-                        errorNotificationShow("App更新失败", res.data.message)
+                        errorNotificationShow(this.$t('appManagement.updatePackageErrorNotificationText'), res.data.message)
                       }
                       this.isShowUpdateProgress = false
                       this.updatePercentage = 0
@@ -490,7 +490,7 @@
                 }
                 console.log("deleteAppIdArray: ", deleteAppIdArray)
                 if(deleteAppIdArray.length === 0) {
-                  errorMessageShow("未选择删除项")
+                  errorMessageShow(this.$t('appManagement.deletePackageSelectErrorMessageText'))
                 } else {
                   this.appListTableLoading = true
                   NetApiShareInstance.packageDelete(readAccount(), readToken(), deleteAppIdArray).then((res) => {
@@ -500,7 +500,7 @@
                       // this.$refs.appListTable.clearSelection()
                       this.appListTableAllReload(this.requiredCount, 0, {})
                     } else {
-                      errorNotificationShow("获取App列表失败", res.data.message)
+                      errorNotificationShow(this.$t('appManagement.deletePackageErrorNotificationText'), res.data.message)
                     }
                   }).catch((err) => {
                     this.appListTableLoading = false
@@ -528,7 +528,7 @@
                     this.appListTableData.push.apply(this.appListTableData, res.data.items)
                     this.isAppListLoadFinished = res.data.finished
                   } else {
-                    errorNotificationShow("获取App列表失败", res.data.message)
+                    errorNotificationShow(this.$t('appManagement.obtainAppListErrorNotificationText'), res.data.message)
                   }
                   this.appListTableScrollLoading = false
                 }).catch((err) => {
@@ -558,7 +558,7 @@
                     this.$refs.appListTable.clearSelection()
                     // console.log("删除成功, this.appListTableSelectionData: ", this.appListTableSelectionData)
                   } else {
-                    errorNotificationShow("获取App列表失败", res.data.message)
+                    errorNotificationShow(this.$t('appManagement.obtainAppListErrorNotificationText'), res.data.message)
                   }
                   this.appListTableLoading = false
                 }).catch((err) => {
@@ -577,7 +577,7 @@
               if(this.inputSearchString !== "" && this.inputSelectString !== "") {
                 this.appListTableAllReload(this.requiredCount, 0, searchObject)
               } else {
-                errorMessageShow("搜索信息不完整")
+                errorMessageShow(this.$t('appManagement.searchAppListErrorMessageText'))
               }
 
             },
