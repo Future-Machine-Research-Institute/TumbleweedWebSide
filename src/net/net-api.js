@@ -12,6 +12,11 @@ const packageObtainUrl = "/package/obtain"
 const packageDeleteUrl = "/package/delete"
 const packageUpdateUrl = "/package/update"
 
+const userAddUrl = "/users/add"
+const userDeleteUrl = "/users/delete"
+const userListUrl = "/users/list"
+const userUpdatePermissionUrl = "/users/updatePermission"
+
 // const accountKey = "account"
 // const passwordKey = "password"
 // const tokenKey = "token"
@@ -142,6 +147,87 @@ class NetApi {
                     }
                 }
                 axios.post(packageUpdateUrl, formData, config).then((res) => {
+                    resolve(res)
+                }).catch((err) => {
+                    reject(err)
+                })
+            } catch (error) {
+                reject(error)
+            }
+        })
+    }
+
+    userAdd(account, token, newName, newAccount, newPassword, permission) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let data = {
+                    account: account, 
+                    token: token,
+                    newName: newName,
+                    newAccount: newAccount,
+                    newPassword: newPassword,
+                    permission: permission
+                }
+                console.log("data: ", data)
+                axios.post(userAddUrl, data).then((res) => {
+                    resolve(res)
+                }).catch((err) => {
+                    reject(err)
+                })
+            } catch (error) {
+                reject(error)
+            }
+        })
+    }
+
+    userDelete(account, token, accountArray) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let data = {
+                    account: account, 
+                    token: token, 
+                    accountArray: accountArray
+                }
+                axios.post(userDeleteUrl, data).then((res) => {
+                    resolve(res)
+                }).catch((err) => {
+                    reject(err)
+                })
+            } catch (error) {
+                reject(error)
+            }
+        })
+    }
+
+    userList(account, token, queryConditions) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let data = {
+                    account: account, 
+                    token: token, 
+                    queryConditions: queryConditions
+                }
+                axios.post(userListUrl, data).then((res) => {
+                    resolve(res)
+                }).catch((err) => {
+                    reject(err)
+                })
+            } catch (error) {
+                reject(error)
+            }
+        })
+    }
+
+    userUpdatePermission(account, token, updateAccount, updatePermission) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let data = {
+                    account: account, 
+                    token: token, 
+                    updateAccount: updateAccount,
+                    updatePermission: updatePermission
+                }
+                axios.post(userUpdatePermissionUrl, data).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)

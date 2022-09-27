@@ -16,7 +16,6 @@ export default {
         loginDataInvalidText: "Login data is illegal!"
     },
     appManagement: {
-
         backButtonText: "Back",
         titleText: "AppManagement",
         uploadPackageDialogTitleText: "App Package Upload",
@@ -87,6 +86,65 @@ export default {
         obtainAppListErrorNotificationText: "Failed to get App list",
         
         searchAppListErrorMessageText: "Incomplete search information",
+    },
+    userManagement: {
+        backButtonText: "Back",
+        titleText: "UserManagement",
 
+        addUserDialogTitleText: "Add User",
+        addUserDialogFormNameItemText: "Username",
+        addUserDialogFormAccountItemText: "Account",
+        addUserDialogFormPasswordItemText: "Password",
+        addUserDialogFormPermissionItemText: "Permission",
+        addUserDialogFormPermissionItemTipsText: "Select",
+        addUserDialogFormPermissionItemOption0Text: "Administrator",
+        addUserDialogFormPermissionItemOption1Text: "Tester",
+        addUserDialogFormPermissionItemOption2Text: "Experiencer",
+        addUserDialogCancelButtonText: "Cancel",
+        addUserDialogAddButtonText: "Add",
+
+        updatePermissionDialogTitleText: "Update Permission",
+        updatePermissionDialogFormAccountItemText: "Account",
+        updatePermissionDialogFormPermissionItemText: "Permission",
+        updatePermissionDialogFormPermissionItemTipsText: "Select",
+        updatePermissionDialogFormPermissionItemOption0Text: "Administrator",
+        updatePermissionDialogFormPermissionItemOption1Text: "Tester",
+        updatePermissionDialogFormPermissionItemOption2Text: "Experiencer",
+        updatePermissionDialogCancelButtonText: "Cancel",
+        updatePermissionDialogUpdateButtonText: "Update",
+
+        userListTableAvatarColumnText: "Avatar",
+        userListTableAccountColumnText: "Account",
+        userListTableNameColumnText: "Username",
+        userListTablePermissionColumnText: "Permission",
+        userListTableOperationsColumnText: "Operations",
+        userListTableOperationsColumnUpdateButtonText: "UpdatePermission",
+
+        searchInputTipsText: "Please enter username or account",
+
+        addUserButtonText: "Add User",
+        deleteUserButtonText: "Delete User",
+
+        addUserFormRulesNameMessage0Text: "Username can not be empty",
+        addUserFormRulesNameMessage1Text: "Username must be within 2-24 characters and cannot contain special characters and spaces",
+        addUserFormRulesAccountMessage0Text: "Account cannot be empty",
+        addUserFormRulesAccountMessage1Text: "Please enter a valid phone number",
+        addUserFormRulesPasswordMessage0Text: "Password can not be blank",
+        addUserFormRulesPasswordMessage1Text: "Password length must be within 8-20 characters, and cannot contain special characters and spaces",
+        addUserFormRulesPermissionMessage0Text: "Permission not selected",
+
+        updatePermissionFormRulesAccountMessage0Text: "Account cannot be empty",
+        updatePermissionFormRulesAccountMessage1Text: "Please enter a valid phone number",
+        updatePermissionFormRulesPermissionMessage0Text: "Permission not selected",
+        
+        searchUserListErrorMessageText: "Search information cannot be empty",
+        addUserErrorNotificationText: "Failed to add user",
+        updatePermissionErrorNotificationText: "Failed to update permissions",
+        deleteUserErrorMessageText: "Delete item not selected",
+        deleteUserErrorNotificationText: "Failed to delete user",
+        administratorPermissionText: "Administrator",
+        testerPermissionText: "Tester",
+        experiencerPermissionText: "Experiencer",
+        obtainUserListErrorNotificationText: "Failed to get user list",
     }
 }

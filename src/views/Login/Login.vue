@@ -5,7 +5,7 @@
     <el-image class = "logo-image" :src = "logoUrl" >
 
     </el-image>
-    <el-form class = "login-form" ref = "form" :model = "form" :rules = "rules">
+    <el-form class = "login-form" ref = "form" :model = "form" :rules = "rules" label-position="left">
         <el-form-item class = "account-item" prop = "account">
             <el-input type = "text" :placeholder = "$t('login.accountInputTipsText')" clearable v-model = "form.account">
                 <template #prefix>

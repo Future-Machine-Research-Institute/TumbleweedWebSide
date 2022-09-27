@@ -7,7 +7,7 @@
         <el-progress class="upload-progress" type="circle" :percentage="uploadPercentage" />
       </div>
       <div class="upload-dialog-body">
-        <el-form class="upload-dialog-form" ref = "uploadPackageForm" :model = "uploadPackageForm" :rules = "uploadPackageRules">
+        <el-form class="upload-dialog-form" ref = "uploadPackageForm" :model = "uploadPackageForm" :rules = "uploadPackageRules" label-width="auto" label-position="left">
           <el-form-item :label="$t('appManagement.uploadPackageDialogFormFileNameItemText')" prop = "fileName">
             <el-input v-model="uploadPackageForm.fileName" autocomplete="off" type="file" ref="uploadFileSelectInput" accept=".apk,.ipa" @change="uploadFileSelect" />
           </el-form-item>
@@ -48,7 +48,7 @@
         <el-progress class="update-progress" type="circle" :percentage="updatePercentage" />
       </div>
       <div class="update-dialog-body">
-        <el-form class="update-dialog-form" ref = "updatePackageForm" :model = "updatePackageForm" :rules = "updatePackageRules">
+        <el-form class="update-dialog-form" ref = "updatePackageForm" :model = "updatePackageForm" :rules = "updatePackageRules" label-width="auto" label-position="left">
           <el-form-item :label="$t('appManagement.updatePackageDialogFormAppIdItemText')" prop = "appId">
             <el-input v-model="updatePackageForm.appId" disabled/>
           </el-form-item>
@@ -555,6 +555,7 @@
                     this.appListTableData = res.data.items
                     this.isAppListLoadFinished = res.data.finished
                     this.scrollLoadingSearchObject = searchObject
+                    this.appListTableSelectionData = []
                     this.$refs.appListTable.clearSelection()
                     // console.log("删除成功, this.appListTableSelectionData: ", this.appListTableSelectionData)
                   } else {
