@@ -1,24 +1,46 @@
 <template>
-    <div class = "main">
-        <div class = "item">1</div>
-        <div class = "item">2</div>
-        <div class = "item">3</div>
-        <div class = "item">4</div>
-        <div class = "item">5</div>
-        <div class = "item">6</div>
-        <div class = "item">7</div>
-        <div class = "item">8</div>
-        <div class = "item">9</div>
-        <div class = "item">10</div>
+    <div class="main" v-infinite-scroll="load">
+      <el-card class="app-card" v-for="item in appListData">
+        <template #header>
+          <div class="app-card-header">
+            <span>Tumblew</span>
+            <el-image />
+            <!-- <el-button class="button" text>Operation button</el-button> -->
+          </div>
+        </template>
+        <el-button>安装</el-button>
+        <el-button>扫码</el-button>
+        <el-button>详情</el-button>
+        <!-- <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div> -->
+      </el-card>
     </div>
+    
 </template>
 
 <script>
     export default {
         data() {
             return {
-                
+                appListData: [
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew"
+                ]
             }
+        },
+        methods: {
+          load() {
+            console.log("到底了")
+          }
         },
         //生命周期 - 创建完成,访问当前this实例
         created() {
@@ -35,21 +57,19 @@
 /* @import url(); 引入css类 */
 
 .main {
-    width: 90vw;
-    height: calc(100vh - 164px);
+    width: 100%;
+    height: 100%;
     margin: 0 auto;
     background-color: white;
     display: grid;
     justify-content: space-evenly;
     grid-template-columns: repeat(auto-fill, 250px);
-    grid-template-rows: repeat(auto-fill, 100px);
+    grid-template-rows: repeat(auto-fill, 150px);
     grid-gap: 20px;
     gap: 20px;
     overflow: auto;
     padding-top: 25px;
     padding-bottom: 25px;
-    padding-left: 10px;
-    padding-right: 10px;
     
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -70,5 +90,16 @@
     border: 0.2px solid lightgray;
     /* box-shadow: 0 0 30px #DCDFE6; */
 }
-    
+
+.app-card {
+  width: 250px;
+  height: 150px;
+}
+
+.app-card-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 </style>

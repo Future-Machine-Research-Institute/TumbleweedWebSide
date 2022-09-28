@@ -6,7 +6,7 @@
                 <el-icon class = "el-input__icon" :size = "20" ><search /></el-icon>
             </template>
         </el-input>
-        <el-button class = "search-button" type="primary" round >搜索</el-button>
+        <el-button class = "search-button" >搜索</el-button>
         <el-dropdown class = "avatar-container">
         <el-avatar class = "user-avatar" ></el-avatar>
         <template #dropdown>
@@ -79,17 +79,17 @@
 
 .search-input {
     width: 25%;
-    display: block;
+    height: 40px;
     position: absolute;
     top: 12px;
     left: 84px;
 }
 
-.search-input :deep(.el-input__inner) {
+/* .search-input :deep(.el-input__inner) {
     height: 40px;
     border: 0.2px solid lightgray;
     border-radius: 20px;
-}
+} */
 
 .search-button {
     width: 5%;
@@ -99,6 +99,8 @@
     top: 12px;
     left: calc(25% + 94px);
     min-width: 60px;
+    color: white;
+    background-color: #409EFF;
 }
 
 .avatar-container{

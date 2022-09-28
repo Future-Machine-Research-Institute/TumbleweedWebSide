@@ -52,9 +52,10 @@
 }
 
 .container {
-    width: 90vw;
+    width: calc(90vw + 20px);
     height: calc(100vh - 164px);
-    margin: 0 auto;
+    margin-left: calc(5vw - 10px);
+    /* margin: 0 auto; */
 }
     
 </style>

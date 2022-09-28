@@ -47,6 +47,7 @@
 .head {
     height: 64px;
     /* background-color: white; */
+    display: flex;
     align-items: center;
 }
 
