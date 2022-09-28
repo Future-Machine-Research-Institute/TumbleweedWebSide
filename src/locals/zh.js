@@ -146,5 +146,13 @@ export default {
         testerPermissionText: "测试员",
         experiencerPermissionText: "体验员",
         obtainUserListErrorNotificationText: "获取用户列表失败",
+    },
+    personalInformation: {
+        backButtonText: "返回",
+        titleText: "个人信息",
+
+        administratorPermissionText: "管理员",
+        testerPermissionText: "测试员",
+        experiencerPermissionText: "体验员",
     }
 }

@@ -17,6 +17,8 @@ const userDeleteUrl = "/users/delete"
 const userListUrl = "/users/list"
 const userUpdatePermissionUrl = "/users/updatePermission"
 
+const userInformationUrl = "/users/information"
+
 // const accountKey = "account"
 // const passwordKey = "password"
 // const tokenKey = "token"
@@ -228,6 +230,21 @@ class NetApi {
                     updatePermission: updatePermission
                 }
                 axios.post(userUpdatePermissionUrl, data).then((res) => {
+                    resolve(res)
+                }).catch((err) => {
+                    reject(err)
+                })
+            } catch (error) {
+                reject(error)
+            }
+        })
+    }
+
+    userInformation(account, token) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let data = {account: account, token: token}
+                axios.post(userInformationUrl, data).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)

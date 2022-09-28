@@ -146,5 +146,13 @@ export default {
         testerPermissionText: "Tester",
         experiencerPermissionText: "Experiencer",
         obtainUserListErrorNotificationText: "Failed to get user list",
+    },
+    personalInformation: {
+        backButtonText: "Back",
+        titleText: "PersonalInformation",
+
+        administratorPermissionText: "Administrator",
+        testerPermissionText: "Tester",
+        experiencerPermissionText: "Experiencer",
     }
 }
