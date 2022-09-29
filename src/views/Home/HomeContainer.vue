@@ -1,20 +1,17 @@
 <template>
-    <div class="main" v-infinite-scroll="load">
+    <div class="main" v-scroll="load">
       <el-card class="app-card" v-for="item in appListData">
         <template #header>
           <div class="app-card-header">
             <span>Tumblew</span>
-            <el-image />
-            <!-- <el-button class="button" text>Operation button</el-button> -->
+            <el-image class="app-card-icon"/>
           </div>
         </template>
         <el-button>安装</el-button>
         <el-button>扫码</el-button>
         <el-button>详情</el-button>
-        <!-- <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div> -->
       </el-card>
     </div>
-    
 </template>
 
 <script>
@@ -33,9 +30,46 @@
                   "Tumblew",
                   "Tumblew",
                   "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
+                  "Tumblew",
                   "Tumblew"
                 ]
             }
+        },
+        directives: {
+          'scroll': {
+            beforeMount(el, binding) {
+              // const bodyWrap = el.querySelector('.app-card')
+              const bodyWrap = el
+              const scrollWrapDom = el
+              // console.log(el.scrollTop)
+              let sign = 0
+              let before = 0
+              bodyWrap.addEventListener('scroll', (event) => {
+                console.log("scrollTop: ", scrollWrapDom.scrollTop)
+                //排除左右滚动的情况
+                if(scrollWrapDom.scrollTop !== before) {
+                  if(scrollWrapDom.scrollTop !== 0) {
+                    const scrollDistance = scrollWrapDom.scrollHeight - scrollWrapDom.scrollTop - scrollWrapDom.clientHeight
+                  if (scrollDistance <= sign) {
+                    binding.value()
+                  }
+                  before = scrollWrapDom.scrollTop
+                  }
+                }
+              }, true)
+            }
+          }
         },
         methods: {
           load() {
@@ -59,7 +93,6 @@
 .main {
     width: 100%;
     height: 100%;
-    margin: 0 auto;
     background-color: white;
     display: grid;
     justify-content: space-evenly;
@@ -100,6 +133,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.app-card-icon {
+  width: 40px;
+  height: 40px;
+  background-color: black;
 }
 
 </style>
