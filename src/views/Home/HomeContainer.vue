@@ -1,5 +1,5 @@
 <template>
-    <div class="main" v-scroll="load">
+    <div class="main" v-infinite-scroll="load" infinite-scroll-immediate="false">
       <el-card class="app-card" v-for="item in appListData">
         <template #header>
           <div class="app-card-header">
@@ -29,47 +29,9 @@
                   "Tumblew",
                   "Tumblew",
                   "Tumblew",
-                  "Tumblew",
-                  "Tumblew",
-                  "Tumblew",
-                  "Tumblew",
-                  "Tumblew",
-                  "Tumblew",
-                  "Tumblew",
-                  "Tumblew",
-                  "Tumblew",
-                  "Tumblew",
-                  "Tumblew",
-                  "Tumblew",
-                  "Tumblew",
                   "Tumblew"
                 ]
             }
-        },
-        directives: {
-          'scroll': {
-            beforeMount(el, binding) {
-              // const bodyWrap = el.querySelector('.app-card')
-              const bodyWrap = el
-              const scrollWrapDom = el
-              // console.log(el.scrollTop)
-              let sign = 0
-              let before = 0
-              bodyWrap.addEventListener('scroll', (event) => {
-                console.log("scrollTop: ", scrollWrapDom.scrollTop)
-                //排除左右滚动的情况
-                if(scrollWrapDom.scrollTop !== before) {
-                  if(scrollWrapDom.scrollTop !== 0) {
-                    const scrollDistance = scrollWrapDom.scrollHeight - scrollWrapDom.scrollTop - scrollWrapDom.clientHeight
-                  if (scrollDistance <= sign) {
-                    binding.value()
-                  }
-                  before = scrollWrapDom.scrollTop
-                  }
-                }
-              }, true)
-            }
-          }
         },
         methods: {
           load() {

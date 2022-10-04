@@ -2,18 +2,6 @@ import axios from "axios";
 
 const CancelToken = axios.CancelToken
 
-axios.defaults.baseURL = "https://192.168.1.3"
-axios.defaults.timeout = 30000;
-
-axios.interceptors.response.use(response => {
-
-}, error => {
-    if (error.message === 'interrupt') {
-        return new Promise(() => { })
-    }
-    return Promise.reject(error)
-})
-
 const tokenCheckUrl = "/users/authorize"
 const userLoginUrl = "/users/login"
 
@@ -38,24 +26,36 @@ class NetApi {
     #requestCancelTokenArray
     constructor() {
         this.#requestCancelTokenArray = []
+        axios.defaults.baseURL = "https://192.168.1.3"
+        axios.defaults.timeout = 30000
+        axios.interceptors.request.use(config => {
+            config['cancelToken'] = new CancelToken((cancel) => {
+                this.#requestCancelTokenArray.push(cancel)
+            })
+            return config
+        })
+        axios.interceptors.response.use(response => {
+        
+        }, error => {
+            if (error.message === 'interrupt') {
+                return new Promise(() => { })
+            }
+            return Promise.reject(error)
+        })
     }
 
     cancel() {
         this.#requestCancelTokenArray.forEach((item) => {
             item('interrupt');
         })
+        this.#requestCancelTokenArray = []
     }
 
     checkToken(account, token) {
         return new Promise(async (resolve, reject) => {
             try {
                 let data = {account: account, token: token}
-                const config  = {
-                    cancelToken: new CancelToken((cancel) => {
-                        this.#requestCancelTokenArray.push(cancel)
-                    })
-                }
-                axios.post(tokenCheckUrl, data, config).then((res) => {
+                axios.post(tokenCheckUrl, data).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)
@@ -70,12 +70,7 @@ class NetApi {
         return new Promise(async (resolve, reject) => {
             try {
                 let data = {account: account, password: password}
-                const config  = {
-                    cancelToken: new CancelToken((cancel) => {
-                        this.#requestCancelTokenArray.push(cancel)
-                    })
-                }
-                axios.post(userLoginUrl, data, config).then((res) => {
+                axios.post(userLoginUrl, data).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)
@@ -92,9 +87,6 @@ class NetApi {
                 const config  = {
                     headers: {'Content-Type': 'multipart/form-data'},
                     timeout: 3600000,
-                    cancelToken: new CancelToken((cancel) => {
-                        this.#requestCancelTokenArray.push(cancel)
-                    }),
                     onUploadProgress: (progressEvent) => {
                         if(progressEvent.lengthComputable && (progressCallback && typeof progressCallback === "function")) {
                             progressCallback(progressEvent.loaded / progressEvent.total)
@@ -122,12 +114,7 @@ class NetApi {
                     obtainedCount: obtainedCount,
                     queryConditions: queryConditions
                 }
-                const config  = {
-                    cancelToken: new CancelToken((cancel) => {
-                        this.#requestCancelTokenArray.push(cancel)
-                    })
-                }
-                axios.post(packageObtainUrl, data, config).then((res) => {
+                axios.post(packageObtainUrl, data).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)
@@ -146,12 +133,7 @@ class NetApi {
                     token: token,
                     appIdArray: appIdArray
                 }
-                const config  = {
-                    cancelToken: new CancelToken((cancel) => {
-                        this.#requestCancelTokenArray.push(cancel)
-                    })
-                }
-                axios.post(packageDeleteUrl, data, config).then((res) => {
+                axios.post(packageDeleteUrl, data).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)
@@ -168,9 +150,6 @@ class NetApi {
                 const config  = {
                     headers: {'Content-Type': 'multipart/form-data'},
                     timeout: 3600000,
-                    cancelToken: new CancelToken((cancel) => {
-                        this.#requestCancelTokenArray.push(cancel)
-                    }),
                     onUploadProgress: (progressEvent) => {
                         if(progressEvent.lengthComputable && (progressCallback && typeof progressCallback === "function")) {
                             progressCallback(progressEvent.loaded / progressEvent.total)
@@ -199,12 +178,7 @@ class NetApi {
                     newPassword: newPassword,
                     permission: permission
                 }
-                const config  = {
-                    cancelToken: new CancelToken((cancel) => {
-                        this.#requestCancelTokenArray.push(cancel)
-                    })
-                }
-                axios.post(userAddUrl, data, config).then((res) => {
+                axios.post(userAddUrl, data).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)
@@ -223,12 +197,7 @@ class NetApi {
                     token: token, 
                     accountArray: accountArray
                 }
-                const config  = {
-                    cancelToken: new CancelToken((cancel) => {
-                        this.#requestCancelTokenArray.push(cancel)
-                    })
-                }
-                axios.post(userDeleteUrl, data, config).then((res) => {
+                axios.post(userDeleteUrl, data).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)
@@ -247,12 +216,7 @@ class NetApi {
                     token: token, 
                     queryConditions: queryConditions
                 }
-                const config  = {
-                    cancelToken: new CancelToken((cancel) => {
-                        this.#requestCancelTokenArray.push(cancel)
-                    })
-                }
-                axios.post(userListUrl, data, config).then((res) => {
+                axios.post(userListUrl, data).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)
@@ -272,12 +236,7 @@ class NetApi {
                     updateAccount: updateAccount,
                     updatePermission: updatePermission
                 }
-                const config  = {
-                    cancelToken: new CancelToken((cancel) => {
-                        this.#requestCancelTokenArray.push(cancel)
-                    })
-                }
-                axios.post(userUpdatePermissionUrl, data, config).then((res) => {
+                axios.post(userUpdatePermissionUrl, data).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)
@@ -292,12 +251,7 @@ class NetApi {
         return new Promise(async (resolve, reject) => {
             try {
                 let data = {account: account, token: token}
-                const config  = {
-                    cancelToken: new CancelToken((cancel) => {
-                        this.#requestCancelTokenArray.push(cancel)
-                    })
-                }
-                axios.post(userInformationUrl, data, config).then((res) => {
+                axios.post(userInformationUrl, data).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)

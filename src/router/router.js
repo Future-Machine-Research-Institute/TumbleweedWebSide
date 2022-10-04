@@ -46,7 +46,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     NetApiShareInstance.cancel()
-    next();
+    next()
 })
 
 export default router
