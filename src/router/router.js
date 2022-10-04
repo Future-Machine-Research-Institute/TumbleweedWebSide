@@ -5,6 +5,7 @@ import PersonalInformation from '../views/PersonalInformation/PersonalInformatio
 import AppManagement from '../views/AppManagement/AppManagement.vue'
 import UserManagement from '../views/UserManagement/UserManagement.vue'
 import { LoginView, HomeView, PersonalInformationView, AppManagementView, UserManagementView } from './router-config'
+import NetApiShareInstance from '../net/net-api'
 
 const routes = [
     {
@@ -41,6 +42,11 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes
+})
+
+router.beforeEach((to, from, next) => {
+    NetApiShareInstance.cancel()
+    next();
 })
 
 export default router
