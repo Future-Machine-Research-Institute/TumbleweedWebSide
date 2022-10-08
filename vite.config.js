@@ -20,5 +20,9 @@ export default defineConfig({
     __VUE_I18N_FULL_INSTALL__: true,
     __VUE_I18N_LEGACY_API__: true,
     __INTLIFY_PROD_DEVTOOLS__: false,
+  },
+  server: {
+    port: 3000,
+    host: '192.168.1.3'
   }
 })

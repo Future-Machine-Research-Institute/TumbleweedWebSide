@@ -8,12 +8,13 @@
         </el-input>
         <el-button class = "search-button" >搜索</el-button>
         <el-dropdown class = "avatar-container">
-        <el-avatar class = "user-avatar" ></el-avatar>
+        <el-avatar class = "user-avatar" :src="userAvatar"></el-avatar>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click = "clickOnPersonalInformation">个人信息</el-dropdown-item>
-            <el-dropdown-item divided @click = "clickOnAppManagement">app管理</el-dropdown-item>
+            <el-dropdown-item divided v-if="showAppManagement" @click = "clickOnAppManagement">app管理</el-dropdown-item>
             <el-dropdown-item divided v-if="showUserManagement" @click = "clickOnUserManagement">用户管理</el-dropdown-item>
+            <el-dropdown-item divided @click = "clickOnLogOut">退出账号</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -22,6 +23,10 @@
 
 <script>
     import { UserFilled, Search } from '@element-plus/icons-vue'
+    import NetApiShareInstance from '../../net/net-api'
+    import { readAccount, readToken, removeAccount, removeToken } from '../../utils/utils'
+    import { errorNotificationShow} from '../../utils/notification-view'
+    import { LoginView, PersonalInformationView, AppManagementView, UserManagementView } from '../../router/router-config'
     export default {
         components: {
             UserFilled,
@@ -30,22 +35,30 @@
         data() {
             return {
                 searchString: "",
+                userAvatar: "",
                 logoUrl: new URL('../.././assets/homeLogo.png', import.meta.url).href,
-                showUserManagement: true
+                showAppManagement: false,
+                showUserManagement: false
             }
         },
         methods: {
 
             clickOnPersonalInformation() {
-                this.$router.push('/personalInformation')
+                this.$router.push(PersonalInformationView)
             },
 
             clickOnAppManagement() {
-                this.$router.push('/appManagement')
+                this.$router.push(AppManagementView)
             },
 
             clickOnUserManagement() {
-                this.$router.push('/userManagement')
+                this.$router.push(UserManagementView)
+            },
+
+            clickOnLogOut() {
+                removeAccount()
+                removeToken()
+                this.$router.push(LoginView)
             }
 
         },
@@ -55,7 +68,26 @@
         },
         //生命周期 - 挂载完成,访问DOM元素
         mounted() {
-            
+            console.log("HomeHead -- mounted")
+            NetApiShareInstance.userInformation(readAccount(), readToken()).then((res) => {
+                if (res.data.ret === 0) {
+                    this.userAvatar = res.data.information.avatar
+                    if(res.data.information.permission == 0) {
+                        this.showAppManagement = true
+                        this.showUserManagement = true
+                    } else if(res.data.information.permission == 1) {
+                        this.showAppManagement = true
+                        this.showUserManagement = false
+                    } else {
+                        this.showAppManagement = false
+                        this.showUserManagement = false
+                    }
+                } else {
+                    errorNotificationShow("获取个人信息失败", res.data.message)
+                }
+            }).catch((err) => {
+                errorNotificationShow(err.message)
+            })
         }
     }
 </script>

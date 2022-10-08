@@ -17,6 +17,8 @@ const userUpdatePermissionUrl = "/users/updatePermission"
 
 const userInformationUrl = "/users/information"
 
+const homeObtainUrl = "/home/obtain"
+
 // const accountKey = "account"
 // const passwordKey = "password"
 // const tokenKey = "token"
@@ -35,7 +37,7 @@ class NetApi {
             return config
         })
         axios.interceptors.response.use(response => {
-        
+            return response
         }, error => {
             if (error.message === 'interrupt') {
                 return new Promise(() => { })
@@ -252,6 +254,27 @@ class NetApi {
             try {
                 let data = {account: account, token: token}
                 axios.post(userInformationUrl, data).then((res) => {
+                    resolve(res)
+                }).catch((err) => {
+                    reject(err)
+                })
+            } catch (error) {
+                reject(error)
+            }
+        })
+    }
+
+    homeObtain(account, token, requiredCount, obtainedCount, queryConditions) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let data = {
+                    account: account, 
+                    token: token,
+                    requiredCount: requiredCount,
+                    obtainedCount: obtainedCount,
+                    queryConditions: queryConditions
+                }
+                axios.post(homeObtainUrl, data).then((res) => {
                     resolve(res)
                 }).catch((err) => {
                     reject(err)
