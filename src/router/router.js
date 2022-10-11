@@ -10,7 +10,7 @@ import NetApiShareInstance from '../net/net-api'
 const routes = [
     {
         path:'/',
-        redirect: LoginView
+        redirect: HomeView
     },
     {
         path: LoginView,

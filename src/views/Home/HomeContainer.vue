@@ -20,12 +20,74 @@
     import { errorMessageShow } from '../../utils/message-view'
     import { errorNotificationShow } from '../../utils/notification-view'
     // import { loadingViewShow, loadingViewDismiss } from '../../utils/loading-view'
+    import Bus from '../../utils/bus'
     export default {
         data() {
             return {
               appListTableLoading: false,
-              appListData: []
+              appListData: [],
+              obtainedCount: 0,
+              appListInputSearchText: "",
+              appListSelectSystemSearchText: -1,
+              appListSelectProgressSearchText: -1,
+              // appListSearchObject: {}
             }
+        },
+        computed: {
+          requiredCount() {
+            const tableHeight = document.body.clientHeight - 164
+            console.log("tableHeight: ", tableHeight)
+            const count = parseInt(tableHeight / 200) + 1
+            console.log("count: ", count)
+            return count
+          },
+          appListSearchObject() {
+            if(this.appListInputSearchText === "") {
+              if(this.appListSelectSystemSearchText === -1 && this.appListSelectProgressSearchText === -1) {
+                return {}
+              } else {
+                if(this.appListSelectSystemSearchText === -1 && this.appListSelectProgressSearchText !== -1) {
+                  return {"progress": this.appListSelectProgressSearchText}
+                } else if (this.appListSelectSystemSearchText !== -1 && this.appListSelectProgressSearchText === -1) {
+                  return {"system": this.appListSelectSystemSearchText}
+                } else {
+                  return {"progress": this.appListSelectProgressSearchText, "system": this.appListSelectSystemSearchText}
+                }
+              }
+            } else {
+              if(this.appListSelectSystemSearchText === -1 && this.appListSelectProgressSearchText === -1) {
+                return {
+                  $or: [
+                    { "appId": this.appListInputSearchText },
+                    { "appName": this.appListInputSearchText }
+                  ]
+                }
+              } else {
+                if(this.appListSelectSystemSearchText === -1 && this.appListSelectProgressSearchText !== -1) {
+                  return {
+                    $or: [
+                      { "appId": this.appListInputSearchText, "progress": this.appListSelectProgressSearchText },
+                      { "appName": this.appListInputSearchText, "progress": this.appListSelectProgressSearchText }
+                    ]
+                  }
+                } else if (this.appListSelectSystemSearchText !== -1 && this.appListSelectProgressSearchText === -1) {
+                  return {
+                    $or: [
+                      { "appId": this.appListInputSearchText, "system": this.appListSelectSystemSearchText },
+                      { "appName": this.appListInputSearchText, "system": this.appListSelectSystemSearchText }
+                    ]
+                  }
+                } else {
+                  return {
+                    $or: [
+                      { "appId": this.appListInputSearchText, "progress": this.appListSelectProgressSearchText, "system": this.appListSelectSystemSearchText },
+                      { "appName": this.appListInputSearchText, "progress": this.appListSelectProgressSearchText, "system": this.appListSelectSystemSearchText }
+                    ]
+                  }
+                }
+              }
+            }
+          }
         },
         methods: {
           clickOnDownload(url) {
@@ -33,18 +95,35 @@
           },
           load() {
             console.log("到底了")
+          },
+          inputSearch(val) {
+            this.appListInputSearchText = val
+            this.clickOnSearch()
+          },
+          selectSearch(val) {
+            this.appListSelectSystemSearchText = val.system
+            this.appListSelectProgressSearchText = val.progress
+            this.clickOnSearch()
+          },
+          clickOnSearch() {
+            console.log("appListInputSearchText: ", this.appListInputSearchText)
+            console.log("appListSelectSystemSearchText: ", this.appListSelectSystemSearchText)
+            console.log("appListSelectProgressSearchText: ", this.appListSelectProgressSearchText)
+            console.log("appListSearchObject: ", this.appListSearchObject)
           }
         },
         //生命周期 - 创建完成,访问当前this实例
         created() {
-            
+          Bus.on('inputSearch', this.inputSearch)
+          Bus.on('selectSearch', this.selectSearch)
         },
         //生命周期 - 挂载完成,访问DOM元素
         mounted() {
           console.log("HomeContainer -- mounted")
+          console.log("appListSearchObject: ", this.appListSearchObject)
           this.$nextTick(() => {
             this.appListTableLoading = true
-            NetApiShareInstance.homeObtain(readAccount(), readToken(), 10, 0, {}).then((res) => {
+            NetApiShareInstance.homeObtain(readAccount(), readToken(), 10, 0, this.appListSearchObject).then((res) => {
               if (res.data.ret === 0) {
                 console.log("list: ", res.data.items)
                 console.log("finished: ", res.data.finished)
@@ -60,6 +139,10 @@
               this.appListTableLoading = false
             })
           })
+        },
+        unmounted() {
+          Bus.off('inputSearch')
+          Bus.off('selectSearch')
         }
     }
 </script>

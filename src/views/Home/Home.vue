@@ -28,7 +28,7 @@
             console.log("Home -- mounted")
         },
         unmounted() {
-          console.log("Home -- delloc")
+            console.log("Home -- delloc")
         }
     }
 </script>

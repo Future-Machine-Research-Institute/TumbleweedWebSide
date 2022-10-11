@@ -6,7 +6,7 @@
                 <el-icon class = "el-input__icon" :size = "20" ><search /></el-icon>
             </template>
         </el-input>
-        <el-button class = "search-button" >搜索</el-button>
+        <el-button class = "search-button" @click="clickOnSearch">搜索</el-button>
         <el-dropdown class = "avatar-container">
         <el-avatar class = "user-avatar" :src="userAvatar"></el-avatar>
         <template #dropdown>
@@ -27,6 +27,7 @@
     import { readAccount, readToken, removeAccount, removeToken } from '../../utils/utils'
     import { errorNotificationShow} from '../../utils/notification-view'
     import { LoginView, PersonalInformationView, AppManagementView, UserManagementView } from '../../router/router-config'
+    import Bus from '../../utils/bus'
     export default {
         components: {
             UserFilled,
@@ -42,6 +43,10 @@
             }
         },
         methods: {
+
+            clickOnSearch() {
+                Bus.emit('inputSearch', this.searchString)
+            },
 
             clickOnPersonalInformation() {
                 this.$router.push(PersonalInformationView)
