@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-image class = "logo-image" :src = "logoUrl" ></el-image>
-        <el-input class = "search-input" type = "text" v-model = "searchString" >
+        <el-input class = "search-input" type = "text" v-model = "searchString" placeholder="请输入App名称或者AppId以搜索">
             <template #prefix>
                 <el-icon class = "el-input__icon" :size = "20" ><search /></el-icon>
             </template>
@@ -25,6 +25,7 @@
     import { UserFilled, Search } from '@element-plus/icons-vue'
     import NetApiShareInstance from '../../net/net-api'
     import { readAccount, readToken, removeAccount, removeToken } from '../../utils/utils'
+    import { errorMessageShow } from '../../utils/message-view'
     import { errorNotificationShow} from '../../utils/notification-view'
     import { LoginView, PersonalInformationView, AppManagementView, UserManagementView } from '../../router/router-config'
     import Bus from '../../utils/bus'
@@ -43,7 +44,7 @@
             }
         },
         methods: {
-
+            //搜索输入框失去焦点时要不要搜索待斟酌
             clickOnSearch() {
                 Bus.emit('inputSearch', this.searchString)
             },
@@ -91,7 +92,7 @@
                     errorNotificationShow("获取个人信息失败", res.data.message)
                 }
             }).catch((err) => {
-                errorNotificationShow(err.message)
+                errorMessageShow(err)
             })
         }
     }

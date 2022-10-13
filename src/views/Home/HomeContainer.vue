@@ -8,7 +8,7 @@
         </div>
       </template>
       <el-button class="app-card-button" @click="clickOnDownload(item.downloadLink)">安装</el-button>
-      <el-button class="app-card-button">扫码</el-button>
+      <el-button class="app-card-button" @click="clickOnScanCode(item.downloadLink)">扫码</el-button>
       <el-button class="app-card-button">详情</el-button>
     </el-card>
   </div>
@@ -20,11 +20,14 @@
     import { errorMessageShow } from '../../utils/message-view'
     import { errorNotificationShow } from '../../utils/notification-view'
     // import { loadingViewShow, loadingViewDismiss } from '../../utils/loading-view'
+    import { ElMessageBox } from 'element-plus'
+    import 'element-plus/theme-chalk/el-message-box.css'
     import Bus from '../../utils/bus'
     export default {
         data() {
             return {
               appListTableLoading: false,
+              appListTableScrollLoading: false,
               appListData: [],
               obtainedCount: 0,
               appListInputSearchText: "",
@@ -36,8 +39,10 @@
         computed: {
           requiredCount() {
             const tableHeight = document.body.clientHeight - 164
-            console.log("tableHeight: ", tableHeight)
-            const count = parseInt(tableHeight / 200) + 1
+            const tableWidth = document.body.clientWidth * 0.9 + 20
+            // console.log("tableHeight: ", tableHeight)
+            // console.log("tableWidth: ", tableWidth)
+            const count = parseInt(tableHeight * tableWidth / 37500)
             console.log("count: ", count)
             return count
           },
@@ -93,8 +98,34 @@
           clickOnDownload(url) {
             window.open(url)
           },
+          clickOnScanCode(url) {
+            ElMessageBox.alert(url, '扫描二维码以安装app', {
+              showConfirmButton: false,
+              dangerouslyUseHTMLString: true
+            })
+          },
           load() {
             console.log("到底了")
+            if(this.appListTableLoading === false && this.appListTableScrollLoading === false) {
+              this.appListTableScrollLoading = true
+              NetApiShareInstance.homeObtain(readAccount(), readToken(), this.requiredCount, this.obtainedCount, this.appListSearchObject).then((res) => {
+                if (res.data.ret === 0) {
+                  console.log("list: ", res.data.items)
+                  console.log("finished: ", res.data.finished)
+                  this.obtainedCount = this.obtainedCount + res.data.items.length
+                  this.appListData.push.apply(this.appListData, res.data.items)
+                  // this.isAppListLoadFinished = res.data.finished
+                } else {
+                  errorNotificationShow("获取app列表失败", res.data.message)
+                }
+                this.appListTableScrollLoading = false
+              }).catch((err) => {
+                errorMessageShow(err)
+                this.appListTableScrollLoading = false
+              })
+            } else {
+              errorMessageShow("正在等待加载.....")
+            }
           },
           inputSearch(val) {
             this.appListInputSearchText = val
@@ -110,6 +141,30 @@
             console.log("appListSelectSystemSearchText: ", this.appListSelectSystemSearchText)
             console.log("appListSelectProgressSearchText: ", this.appListSelectProgressSearchText)
             console.log("appListSearchObject: ", this.appListSearchObject)
+            this.appListTableAllReload(this.requiredCount, 0, this.appListSearchObject)
+          },
+          appListTableAllReload(requiredCount, obtainedCount, searchObject) {
+            if(this.appListTableLoading === false && this.appListTableScrollLoading === false) {
+              this.appListTableLoading = true
+              NetApiShareInstance.homeObtain(readAccount(), readToken(), requiredCount, obtainedCount, searchObject).then((res) => {
+                if (res.data.ret === 0) {
+                  console.log("list: ", res.data.items)
+                  console.log("finished: ", res.data.finished)
+                  this.obtainedCount = res.data.items.length
+                  this.appListData = res.data.items
+                  // this.appListData.push.apply(this.appListData, res.data.items)
+                  // this.isAppListLoadFinished = res.data.finished
+                } else {
+                  errorNotificationShow("获取app列表失败", res.data.message)
+                }
+                this.appListTableLoading = false
+              }).catch((err) => {
+                errorMessageShow(err)
+                this.appListTableLoading = false
+              })
+            } else {
+              errorMessageShow("正在等待加载.....")
+            }
           }
         },
         //生命周期 - 创建完成,访问当前this实例
@@ -122,22 +177,7 @@
           console.log("HomeContainer -- mounted")
           console.log("appListSearchObject: ", this.appListSearchObject)
           this.$nextTick(() => {
-            this.appListTableLoading = true
-            NetApiShareInstance.homeObtain(readAccount(), readToken(), 10, 0, this.appListSearchObject).then((res) => {
-              if (res.data.ret === 0) {
-                console.log("list: ", res.data.items)
-                console.log("finished: ", res.data.finished)
-                // this.obtainedCount = this.obtainedCount + res.data.items.length
-                this.appListData.push.apply(this.appListData, res.data.items)
-                // this.isAppListLoadFinished = res.data.finished
-              } else {
-                errorNotificationShow("获取app列表失败", res.data.message)
-              }
-              this.appListTableLoading = false
-            }).catch((err) => {
-              errorMessageShow(err)
-              this.appListTableLoading = false
-            })
+            this.appListTableAllReload(this.requiredCount, 0, {})
           })
         },
         unmounted() {
@@ -174,15 +214,13 @@
     display:none;/*隐藏滚动条*/
  }
 
-.item {
+/* .item {
     width: 250px;
     height: 100px;
-    /* background-color: bisque; */
     background-color: white;
     border-radius: 5px;
     border: 0.2px solid lightgray;
-    /* box-shadow: 0 0 30px #DCDFE6; */
-}
+} */
 
 .app-card {
   width: 250px;
