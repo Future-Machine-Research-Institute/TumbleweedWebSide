@@ -20,10 +20,14 @@
     import { errorMessageShow } from '../../utils/message-view'
     import { errorNotificationShow } from '../../utils/notification-view'
     // import { loadingViewShow, loadingViewDismiss } from '../../utils/loading-view'
-    import { ElMessageBox } from 'element-plus'
-    import 'element-plus/theme-chalk/el-message-box.css'
+    import { messageBoxShow } from '../../utils/message-box-view'
+    import QrcodeVue from 'qrcode.vue'
     import Bus from '../../utils/bus'
+    import {h} from 'vue'
     export default {
+        components: {
+          QrcodeVue
+        },
         data() {
             return {
               appListTableLoading: false,
@@ -99,10 +103,7 @@
             window.open(url)
           },
           clickOnScanCode(url) {
-            ElMessageBox.alert(url, '扫描二维码以安装app', {
-              showConfirmButton: false,
-              dangerouslyUseHTMLString: true
-            })
+            messageBoxShow('扫描二维码以安装app', h(QrcodeVue, {value:url, size:256, level:"H"}))
           },
           load() {
             console.log("到底了")
