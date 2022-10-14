@@ -7,7 +7,7 @@
           <el-image class="app-card-icon" :src="item.appIcon" />
         </div>
       </template>
-      <el-button class="app-card-button" @click="clickOnDownload(item.downloadLink)">安装</el-button>
+      <el-button class="app-card-button" @click="clickOnDownload(item.downloadLink, item.packageLink)">安装</el-button>
       <el-button class="app-card-button" @click="clickOnScanCode(item.downloadLink)">扫码</el-button>
       <el-button class="app-card-button">详情</el-button>
     </el-card>
@@ -16,7 +16,7 @@
 
 <script>
     import NetApiShareInstance from '../../net/net-api'
-    import { readAccount, readToken } from '../../utils/utils'
+    import { readAccount, readToken, platform } from '../../utils/utils'
     import { errorMessageShow } from '../../utils/message-view'
     import { errorNotificationShow } from '../../utils/notification-view'
     // import { loadingViewShow, loadingViewDismiss } from '../../utils/loading-view'
@@ -99,11 +99,11 @@
           }
         },
         methods: {
-          clickOnDownload(url) {
-            window.open(url)
+          clickOnDownload(downloadLink, packageLink) {
+            window.open(platform() === 0 ?  downloadLink : packageLink)
           },
-          clickOnScanCode(url) {
-            messageBoxShow('扫描二维码以安装app', h(QrcodeVue, {value:url, size:256, level:"H"}))
+          clickOnScanCode(downloadLink) {
+            messageBoxShow('扫描二维码以安装app', h(QrcodeVue, {value:downloadLink, size:128, level:"H"}))
           },
           load() {
             console.log("到底了")

@@ -94,6 +94,30 @@ const transformUTCTimeStampToLocalTime = (utcTimeStamp) => {
     return Y + M + D + h + m + s
 }
 
+// ios === 0 android === 1 pc === 2
+const platform = () => {
+    const u = navigator.userAgent
+    // const isPc = u.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+    let isPc = true
+    let agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"]
+    for (let i in agents) {
+        if (u.indexOf(agents[i]) > -1) {
+            isPc = false
+            break
+        }
+    }
+    const isIos = (!!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) ||  (u.indexOf("iPhone") > -1 || u.indexOf("Mac") > -1) || (u.indexOf("iPad") > -1)
+    if(isPc === true) {
+        return 2
+    } else {
+        if(isIos === true) {
+            return 0
+        } else {
+            return 1
+        }
+    }
+}
+
 export {
     storeAccount, 
     readAccount, 
@@ -110,7 +134,8 @@ export {
     removeLanguage,
     md5FromFile,
     getUTCTimeStamp,
-    transformUTCTimeStampToLocalTime
+    transformUTCTimeStampToLocalTime,
+    platform
 }
 
 
