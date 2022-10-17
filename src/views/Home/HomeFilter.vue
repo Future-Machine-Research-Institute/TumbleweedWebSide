@@ -1,6 +1,6 @@
 <template>
     <div class = "main">
-        <el-select v-model = "system" class="system-select" placeholder="选择系统" size="large" @change="selectSearch">
+        <el-select v-model = "system" class="system-select" :placeholder="$t('home.homeFilterSystemSelectPlaceholderText')" size="large" @change="selectSearch">
             <el-option
             v-for="item in systems"
             :key="item.value"
@@ -9,7 +9,7 @@
             >
             </el-option>
         </el-select>
-        <el-select v-model = "progress" class="version-select" placeholder="选择版本" size="large" @change="selectSearch">
+        <el-select v-model = "progress" class="version-select" :placeholder="$t('home.homeFilterVersionSelectPlaceholderText')" size="large" @change="selectSearch">
             <el-option
             v-for="item in versions"
             :key="item.value"
@@ -29,29 +29,29 @@
                 systems : [
                   {
                     value: -1,
-                    label: '任何系统',
+                    label: this.$t('home.homeFilterSystemSelectOption1Text'),
                   },
                   {
                     value: 0,
-                    label: 'IOS',
+                    label: this.$t('home.homeFilterSystemSelectOption2Text'),
                   },
                   {
                     value: 1,
-                    label: 'Android',
+                    label: this.$t('home.homeFilterSystemSelectOption3Text'),
                   }
                 ],
                 versions : [
                   {
                     value: -1,
-                    label: '任何版本',
+                    label: this.$t('home.homeFilterVersionSelectOption1Text'),
                   },
                   {
                     value: 0,
-                    label: '正式版',
+                    label: this.$t('home.homeFilterVersionSelectOption2Text'),
                   },
                   {
                     value: 1,
-                    label: '测试版',
+                    label: this.$t('home.homeFilterVersionSelectOption3Text'),
                   }
                   ],
                 system : -1,
