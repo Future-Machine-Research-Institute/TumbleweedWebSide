@@ -1,8 +1,9 @@
 
 export default {
     language: {
+        languageSelectPlaceholderText: "语言",
         zh: "中文",
-        en: "英文"
+        en: "English"
     },
     login: {
         accountInputTipsText: "请输入账号",

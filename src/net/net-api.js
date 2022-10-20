@@ -1,4 +1,5 @@
 import axios from "axios";
+import { readLanguage } from "../utils/utils";
 
 const CancelToken = axios.CancelToken
 
@@ -34,9 +35,16 @@ class NetApi {
             config['cancelToken'] = new CancelToken((cancel) => {
                 this.#requestCancelTokenArray.push(cancel)
             })
+            config.headers['Accept-Language'] = readLanguage()
             return config
         })
         axios.interceptors.response.use(response => {
+            if(response.data.ret === 100003) {
+                window.location.href = '/login'
+            }
+            if(response.data.ret === 100004) {
+                window.location.href = '/home'
+            }
             return response
         }, error => {
             if (error.message === 'interrupt') {

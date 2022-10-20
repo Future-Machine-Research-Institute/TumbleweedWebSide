@@ -1,7 +1,8 @@
 
 export default {
     language: {
-        zh: "Chinese",
+        languageSelectPlaceholderText: "Language",
+        zh: "中文",
         en: "English"
     },
     login: {

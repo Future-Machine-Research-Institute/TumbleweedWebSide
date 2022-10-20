@@ -1,5 +1,5 @@
 <template>
-    <el-select class = "language-select" v-model="languageString" placeholder="lang" @change="changeLanguage">
+    <el-select class = "language-select" v-model="languageString" :placeholder="$t('language.languageSelectPlaceholderText')" @change="changeLanguage">
         <el-option v-for="locale in $i18n.availableLocales" :key="`locale-${locale}`" :value="locale" :label = "$t(`language.${locale}`)">{{ $t(`language.${locale}`) }}</el-option>
     </el-select>
     <el-image class = "logo-image" :src = "logoUrl" >

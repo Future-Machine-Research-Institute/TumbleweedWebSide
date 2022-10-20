@@ -6,7 +6,7 @@
     </el-page-header>
     <el-divider class = "divider" />
 
-    <el-dialog v-model="addUserDialogFormVisible" :title="$t('userManagement.addUserDialogTitleText')" width="70%" >
+    <el-dialog v-model="addUserDialogFormVisible" :title="$t('userManagement.addUserDialogTitleText')" width="70%" :destroy-on-close="true">
         <el-form ref = "addUserForm" :model="addUserForm" :rules = "addUserFormRules" label-width="auto" label-position="left">
             <el-form-item :label="$t('userManagement.addUserDialogFormNameItemText')" prop="name">
                 <el-input v-model="addUserForm.name"/>
@@ -33,7 +33,7 @@
         </template>
     </el-dialog>
 
-    <el-dialog v-model="updatePermissionDialogFormVisible" :title="$t('userManagement.updatePermissionDialogTitleText')" width="70%" >
+    <el-dialog v-model="updatePermissionDialogFormVisible" :title="$t('userManagement.updatePermissionDialogTitleText')" width="70%" :destroy-on-close="true">
         <el-form ref = "updatePermissionForm" :model="updatePermissionForm" :rules = "updatePermissionFormRules" label-width="auto" label-position="left">
             <el-form-item :label="$t('userManagement.updatePermissionDialogFormAccountItemText')" prop="account">
                 <el-input v-model="updatePermissionForm.account" disabled/>

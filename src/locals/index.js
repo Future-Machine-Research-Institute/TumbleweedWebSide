@@ -1,17 +1,29 @@
 import { createI18n } from "vue-i18n";
 import zh from "./zh"
 import en from "./en"
-import { readLanguage } from "../utils/utils";
+import { readLanguage, storeLanguage } from "../utils/utils";
 
 const messages = {
     en,
     zh
 }
 
-const language = (navigator.language || 'en').toLocaleLowerCase()
+const language = () => {
+    if(readLanguage() !== null) {
+        return readLanguage()
+    }
+    if(["en", "zh"].indexOf(navigator.language.toLocaleLowerCase().split('-')[0]) > -1) {
+        storeLanguage(navigator.language.toLocaleLowerCase().split('-')[0])
+        return navigator.language.toLocaleLowerCase().split('-')[0]
+    } else {
+        storeLanguage('en')
+        return 'en'
+    }
+}
 const i18n = createI18n({
     legacy: true,
-    locale: readLanguage() || language.split('-')[0] || 'en',
+    globalInjection: true,
+    locale: language(),
     fallbackLocale: 'en',
     messages
 })

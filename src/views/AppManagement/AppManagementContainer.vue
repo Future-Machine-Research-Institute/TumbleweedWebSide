@@ -1,7 +1,7 @@
 <template>
   <div class="main">
 
-    <el-dialog v-model="uploadPackageDialogVisible" :title="$t('appManagement.uploadPackageDialogTitleText')" width="100%" top="0px">
+    <el-dialog v-model="uploadPackageDialogVisible" :title="$t('appManagement.uploadPackageDialogTitleText')" width="100%" top="0px" :destroy-on-close="true" :close-on-click-modal="false" :close-on-press-escape="false">
       <!-- <Transition name="fade"></Transition> -->
       <div v-if="isShowUploadProgress" class="upload-progress-container">
         <el-progress class="upload-progress" type="circle" :percentage="uploadPercentage" />
@@ -43,7 +43,7 @@
       </template>
     </el-dialog>
 
-    <el-dialog v-model="updatePackageDialogVisible" :title="$t('appManagement.updatePackageDialogTitleText')" width="100%" top="0px">
+    <el-dialog v-model="updatePackageDialogVisible" :title="$t('appManagement.updatePackageDialogTitleText')" width="100%" top="0px" :destroy-on-close="true" :close-on-click-modal="false" :close-on-press-escape="false">
       <div v-if="isShowUpdateProgress" class="update-progress-container">
         <el-progress class="update-progress" type="circle" :percentage="updatePercentage" />
       </div>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog v-model="appDescriptionsVisible" :title="$t('home.homeContainerAppDescriptionsTitleText')" width="85%">
+    <el-dialog v-model="appDescriptionsVisible" :title="$t('home.homeContainerAppDescriptionsTitleText')" width="85%" :destroy-on-close="true">
       <el-descriptions :column="1">
         <el-descriptions-item :label="$t('home.homeContainerAppDescriptionsItem1Text')">
           <el-tag size="small">{{appItemId}}</el-tag>
