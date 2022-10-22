@@ -118,16 +118,18 @@
         },
         //生命周期 - 挂载完成,访问DOM元素
         mounted() {
-            loadingViewShow()
-            NetApiShareInstance.checkToken(readAccount(), readToken()).then((res) => {
-                loadingViewDismiss()
-                if(res.data.ret === 0) {
-                    this.$router.push(HomeView)
-                }
-            }).catch((err) => {
-                loadingViewDismiss()
-                errorNotificationShow(this.$t('login.requestFailedText'), err.message)
-            })
+            if (readAccount() !== null && readToken() !== null) {
+                loadingViewShow()
+                NetApiShareInstance.checkToken(readAccount(), readToken()).then((res) => {
+                    loadingViewDismiss()
+                    if (res.data.ret === 0) {
+                        this.$router.push(HomeView)
+                    }
+                }).catch((err) => {
+                    loadingViewDismiss()
+                    errorNotificationShow(this.$t('login.requestFailedText'), err.message)
+                })
+            }
         }
     }
 </script>
